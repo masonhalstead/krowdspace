@@ -11,6 +11,9 @@ $font-family-sans-serif: 'Lato', sans-serif;
 $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome';
 
-// @import 'base/all';
+// Import Krowdspace Component styles
+@import '~krowdspace.components/src/core/navigation';
+
+@import 'base/krowdspace';
 // @import 'vendors/all';
 // @import 'components/all';

@@ -7,12 +7,6 @@ import App from './App';
 import store from './store';
 import './resources/scss/index.scss';
 import './resources/js/krowdspace.api';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { faSignOutAlt, faCog } from '@fortawesome/free-solid-svg-icons';
-
-library.add(far, fas, faSignOutAlt, faCog);
 
 global.store = store;
 

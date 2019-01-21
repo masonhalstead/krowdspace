@@ -1,22 +1,19 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App.js';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { faBars, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-import styles from './styles.css'
+import Navigation from './components/Navigation';
+import Loading from './components/Loading';
 
-export default class ExampleComponent extends Component {
-  static propTypes = {
-    text: PropTypes.string
-  }
+library.add(far, fas, faBars, faUserCircle, faSignOutAlt);
 
-  render() {
-    const {
-      text
-    } = this.props
+ReactDOM.render(<App />, document.getElementById('root'));
 
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
-}
+export {
+  Navigation,
+  Loading
+};
