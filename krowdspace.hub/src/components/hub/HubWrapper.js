@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-
+import { Scrollbars } from 'react-custom-scrollbars';
 class HubWrapper extends Component {
   render() {
     return (
-      <React.Fragment>
-        <h1>Administrative</h1>
-        <div className="cogn-view-wrapper">
-          <div className="cogn-full-panel text-center">
-            <div className="cogn-panel-inner">
-              This is the administrative area for things
-            </div>
-          </div>
+      <Scrollbars autoHide={false} className="advertiser-campaigns-body-fixed">
+        <div className="hub-wrapper">
+          <h1>Back the Project, not the Platform</h1>
+          <p>
+            At Krowdspace, our goal is to unify the crowdfunding community.
+            Krowdspace members will receive exclusive rewards for backing
+            projects and project owners gain access to our easy to use
+            promotional tools and resources to take their campaigns to the next
+            level.
+          </p>
         </div>
-      </React.Fragment>
+      </Scrollbars>
     );
   }
 }

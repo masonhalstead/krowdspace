@@ -17,6 +17,9 @@ box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
     display: flex;
     align-items: center; 
 }
+.logo-image {
+    display: block;
+}
 .navigation-block {
     display: flex;
     flex-grow: 1;
@@ -34,7 +37,6 @@ box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
 .actions-block {
     display: flex;
     align-items: center;
-    border-left: 1px solid #c0c0c0;
 }
 .action-wrapper {
     display: flex;
@@ -47,5 +49,5 @@ box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
     color: #4472f8;
 }
 .action-icon {
-    width: 40px !important;
+    width: 45px !important;
 }

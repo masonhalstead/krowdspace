@@ -1,0 +1,8 @@
+.sidepanel-container {
+    border-left: 1px solid #c0c0c0;
+    border-top: 1px solid #c0c0c0;
+    z-index: 1;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: -2px 1px 4px 0 rgba(0, 0, 0, 0.12)
+}

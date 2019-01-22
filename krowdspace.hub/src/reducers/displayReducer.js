@@ -1,10 +1,15 @@
+import { SET_DISPLAY } from '../constants/action-types';
 const displayInitialState = {
-  navbar_height: 100,
-  side_panel_width: 100
+  navbar_height: 44,
+  side_panel_width: 46,
+  active_menu: true
 };
 
 export const displayReducer = (state = displayInitialState, action) => {
   switch (action.type) {
+    case SET_DISPLAY:
+      console.log({ ...state, ...action.payload });
+      return { ...state, ...action.payload };
     default:
       return state;
   }

@@ -13,7 +13,8 @@ $fa-font-path: '~font-awesome/fonts';
 
 // Import Krowdspace Component styles
 @import '~krowdspace.components/src/core/navigation';
+@import '~krowdspace.components/src/core/body';
+@import '~krowdspace.components/src/core/sidepanel';
 
 @import 'base/krowdspace';
-// @import 'vendors/all';
-// @import 'components/all';
+@import 'components/all';
