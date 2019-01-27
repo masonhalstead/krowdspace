@@ -1,26 +1,20 @@
 const dotenv = require("dotenv");
+const winston = require("winston");
 dotenv.config();
+const { MONGO_DB, PRIVATE_KEY, NODE_ENV } = process.env;
 
-const mongoose = require("mongoose");
-const users = require("./routes/users");
-const campaigns = require("./routes/campaigns");
-const auth = require("./routes/auth");
 const express = require("express");
 const app = express();
 
-if (!process.env.PRIVATE_KEY) {
-  console.error("FATAL ERROR: jwtPrivateKey is not defined");
-  process.exit(1);
-}
-mongoose
-  .connect("mongodb://localhost/krowdspace")
-  .then(() => console.log("Connected to MongoDB..."))
-  .catch(err => console.error("Could not connect to MongoDB..."));
+require("./startup/logging")(MONGO_DB);
+require("./startup/routes")(app);
+require("./startup/db")(MONGO_DB);
+require("./startup/config")(PRIVATE_KEY);
+require("./startup/validation");
 
-app.use(express.json());
-app.use("/api/users", users);
-app.use("/api/auth", auth);
-app.use("/api/campaigns", campaigns);
+if (NODE_ENV === "production") {
+  require("./startup/prod")(app);
+}
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+app.listen(port, () => winston.info(`Listening on port ${port}...`));
