@@ -25,13 +25,20 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
+  group: {
+    type: Number,
+    required: true
+  },
   admin: {
     type: Boolean
   }
 });
 
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id, admin: this.admin }, PRIVATE_KEY);
+  const token = jwt.sign(
+    { _id: this._id, group: this.group, admin: this.admin },
+    PRIVATE_KEY
+  );
   return token;
 };
 const User = mongoose.model("Users", userSchema);

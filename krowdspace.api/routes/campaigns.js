@@ -1,5 +1,6 @@
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const group = require("../middleware/group");
 const { Campaign, validate } = require("../models/campaign");
 const express = require("express");
 const router = express.Router();
@@ -19,7 +20,7 @@ router.post("/", auth, async (req, res) => {
   res.send(campaign);
 });
 
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", [auth, group], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -37,7 +38,7 @@ router.put("/:id", auth, async (req, res) => {
   res.send(campaign);
 });
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", [auth, group], async (req, res) => {
   const campaign = await Campaign.findByIdAndRemove(req.params.id);
 
   if (!campaign)

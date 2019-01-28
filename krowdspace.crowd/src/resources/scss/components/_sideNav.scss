@@ -1,0 +1,13 @@
+.side-nav-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+}
+.side-nav-wrapper {
+    display: flex;
+    align-items: center;
+    color: #b8b8b8;
+    height: 60px;
+}

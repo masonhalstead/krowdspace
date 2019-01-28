@@ -1,5 +1,5 @@
 {
-  "name": "krowdspace.hub",
+  "name": "krowdspace.crowd",
   "version": "0.1.1",
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "font-awesome": "^4.7.0",
     "husky": "^1.3.1",
     "jquery": "^3.3.1",
-    "krowdspace.components": "^1.1.3",
+    "krowdspace.components": "^1.1.7",
     "lint-staged": "^8.1.0",
     "node-sass": "^4.11.0",
     "prettier": "^1.15.3",

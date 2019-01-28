@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Body, Navigation, SidePanel } from 'krowdspace.components';
-//import {Body} from './components/common/Body';
-//import {SidePanel} from './components/common/SidePanel';
+import {SideNav} from './components/common/SideNav';
 import krowdspace from './resources/images/krowdspace-logo.svg';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay } from './actions/index';
-
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop } from '@fortawesome/free-solid-svg-icons';
+library.add(far, fas, faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop);
 const mapStateToProps = state => {
   return {
     display: state.display
@@ -55,6 +58,10 @@ class ConnectedApp extends Component {
               {
                 name: 'Crowdfunding',
                 link: '/'
+              },
+              {
+                name: 'Sports',
+                link: '/'
               }
             ]}
           />
@@ -68,7 +75,17 @@ class ConnectedApp extends Component {
             </Switch>
             {/* <Footer /> */}
           </Body>
-          <SidePanel width={side_panel_width} top={navbar_height} />
+          <SidePanel width={side_panel_width} top={navbar_height}>
+            <SideNav side_nav={[
+              {icon: 'book', title: 'Publishing, Comics', link: '/'},
+              {icon: 'utensils', title: 'Publishing, Comics', link: '/'},
+              {icon: 'film', title: 'Publishing, Comics', link: '/'},
+              {icon: 'headphones', title: 'Publishing, Comics', link: '/'},
+              {icon: 'gamepad', title: 'Publishing, Comics', link: '/'},
+              {icon: 'palette', title: 'Publishing, Comics', link: '/'},
+              {icon: 'desktop', title: 'Publishing, Comics', link: '/'}
+            ]}/>
+          </SidePanel>
         </div>
       </BrowserRouter>
     );

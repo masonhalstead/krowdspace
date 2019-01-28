@@ -5,7 +5,7 @@ class HubWrapper extends Component {
     return (
       <Scrollbars autoHide={false} className="advertiser-campaigns-body-fixed">
         <div className="hub-wrapper">
-          <h1>Back the Project, not the Platform</h1>
+          <h1>Krowdspace Hub</h1>
           <p>
             At Krowdspace, our goal is to unify the crowdfunding community.
             Krowdspace members will receive exclusive rewards for backing
