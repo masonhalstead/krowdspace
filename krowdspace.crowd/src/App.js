@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Body, Navigation, SidePanel } from 'krowdspace.components';
+import { Body, SidePanel } from 'krowdspace.components';
+import Navigation from './components/common/Navigation';
+import CreateAccount from './components/modals/CreateAccount';
+import UserLogin from './components/modals/UserLogin';
+
 import {SideNav} from './components/common/SideNav';
-import krowdspace from './resources/images/krowdspace-logo.svg';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay } from './actions/index';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { api } from '../src/resources/js/krowdspace.api';
 import { faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop } from '@fortawesome/free-solid-svg-icons';
 library.add(far, fas, faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop);
 const mapStateToProps = state => {
@@ -22,33 +26,33 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class ConnectedApp extends Component {
-  handleProfileClick = () => {
-    console.log('dsfsdf');
-  };
-  handleLogoutClick = () => {
-    console.log('dsfsdf');
-  };
   handleMenuClick = () => {
     let { active_menu, side_panel_width } = this.props.display;
+
+    // Check to see if side panel has a width
     side_panel_width = !!side_panel_width ? 0 : 46;
+
+    // Set display properties
     this.props.setDisplay({
       active_menu: !active_menu,
       side_panel_width: side_panel_width
     });
   };
+  componentDidMount(){
+    api.authLogin().then((res) => {
+        console.log(res)
+    }).catch((err) => {
+    console.log(err.response)
+    });
+  }
   render() {
     const { navbar_height, side_panel_width, active_menu } = this.props.display;
     return (
       <BrowserRouter basename="/">
         <div className="krowdspace-container">
           <Navigation
-            height={navbar_height}
-            img={krowdspace}
-            logo_link={'/'}
             active_menu={active_menu}
             handleMenuClick={this.handleMenuClick}
-            handleLogoutClick={this.handleLogoutClick}
-            handleProfileClick={this.handleProfileClick}
             padding={5}
             navigation={[
               {
@@ -67,13 +71,10 @@ class ConnectedApp extends Component {
           />
           <Body width={side_panel_width} top={navbar_height}>
             <Switch>
-              {/* First Level Routes */}
               <Route exact path="/hub" component={async.HubWrapper} />
-              {/* Redirect Routes */}
               <Redirect exact from="/" push to="/hub" />
               <Route component={async.HubWrapper} />
             </Switch>
-            {/* <Footer /> */}
           </Body>
           <SidePanel width={side_panel_width} top={navbar_height}>
             <SideNav side_nav={[
@@ -86,6 +87,9 @@ class ConnectedApp extends Component {
               {icon: 'desktop', title: 'Publishing, Comics', link: '/'}
             ]}/>
           </SidePanel>
+          {/* Modals */}
+          <UserLogin />
+          <CreateAccount />
         </div>
       </BrowserRouter>
     );

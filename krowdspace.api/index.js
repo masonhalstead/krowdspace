@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const winston = require("winston");
+
 dotenv.config();
 const { MONGO_DB, PRIVATE_KEY, NODE_ENV } = process.env;
 
@@ -16,5 +16,5 @@ if (NODE_ENV === "production") {
   require("./startup/prod")(app);
 }
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => winston.info(`Listening on port ${port}...`));
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`Listening on port ${port}...`));

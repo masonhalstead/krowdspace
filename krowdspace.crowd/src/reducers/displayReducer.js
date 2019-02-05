@@ -8,7 +8,6 @@ const displayInitialState = {
 export const displayReducer = (state = displayInitialState, action) => {
   switch (action.type) {
     case SET_DISPLAY:
-      console.log({ ...state, ...action.payload });
       return { ...state, ...action.payload };
     default:
       return state;

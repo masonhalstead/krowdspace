@@ -6,7 +6,6 @@ import { unregister } from './resources/js/react.service_worker';
 import App from './App';
 import store from './store';
 import './resources/scss/index.scss';
-import './resources/js/krowdspace.api';
 
 global.store = store;
 

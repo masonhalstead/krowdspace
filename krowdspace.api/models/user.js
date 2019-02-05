@@ -26,8 +26,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 1024
   },
   group: {
-    type: Number,
-    required: true
+    type: Number
   },
   admin: {
     type: Boolean
