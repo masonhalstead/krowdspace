@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toggleModal } from '../../actions/';
 import Modal from 'react-bootstrap/Modal';
+import { GoogleLogin } from 'react-google-login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import krowdspace from '../../resources/images/krowdspace-logo.svg';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+const { REACT_APP_GOOGLE_ID } = process.env;
 
 const mapStateToProps = state => {
   return {
@@ -17,6 +19,9 @@ const mapDispatchToProps = dispatch => {
     toggleModal: modal => dispatch(toggleModal(modal))
   };
 };
+const responseGoogle = (response) => {
+  console.log(response);
+}
 class ConnectedUserLogin extends Component {
   handleCloseModal = () => this.props.toggleModal({ user_login: false });
   render() {
@@ -49,7 +54,10 @@ class ConnectedUserLogin extends Component {
         <Button className="btn-login" variant="primary" type="submit">
           Login
         </Button>
-        <Button className="btn-login" variant="secondary" type="submit">
+        <GoogleLogin
+    clientId={REACT_APP_GOOGLE_ID}
+    render={props => (
+      <Button className="btn-login" variant="secondary" onClick={props.onClick}>
       <FontAwesomeIcon
             icon={['fab', 'google']}
             className="google-icon"
@@ -57,6 +65,11 @@ class ConnectedUserLogin extends Component {
           />
           <span className="btn-login-text">Login with Google</span>
         </Button>
+    )}
+    buttonText="Login"
+    onSuccess={responseGoogle}
+    onFailure={responseGoogle}
+  />
       </Form>
       </div>
       <div className="user-login-right">
