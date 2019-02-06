@@ -1,4 +1,8 @@
-import { SET_DISPLAY, USER_LOGOUT, TOGGLE_MODAL } from '../constants/action-types';
+import {
+  SET_DISPLAY,
+  USER_LOGOUT,
+  TOGGLE_MODAL
+} from '../constants/action-types';
 
 export const toggleModal = modal => ({
   type: TOGGLE_MODAL,
@@ -11,4 +15,4 @@ export const setDisplay = display => ({
 export const userLogout = user => ({
   type: USER_LOGOUT,
   payload: user
-})
+});

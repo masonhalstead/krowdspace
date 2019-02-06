@@ -5,16 +5,39 @@ import Navigation from './components/common/Navigation';
 import CreateAccount from './components/modals/CreateAccount';
 import UserLogin from './components/modals/UserLogin';
 
-import {SideNav} from './components/common/SideNav';
+import { SideNav } from './components/common/SideNav';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay } from './actions/index';
+import { api } from '../src/resources/js/krowdspace.api';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import { api } from '../src/resources/js/krowdspace.api';
-import { faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop } from '@fortawesome/free-solid-svg-icons';
-library.add(far, fas, faGamepad, faFutbol, faBook, faHeadphones, faUtensils, faFilm, faPalette, faDesktop);
+import { fab, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import {
+  faGamepad,
+  faFutbol,
+  faBook,
+  faHeadphones,
+  faUtensils,
+  faFilm,
+  faPalette,
+  faDesktop
+} from '@fortawesome/free-solid-svg-icons';
+library.add(
+  far,
+  fas,
+  fab,
+  faGamepad,
+  faFutbol,
+  faBook,
+  faGoogle,
+  faHeadphones,
+  faUtensils,
+  faFilm,
+  faPalette,
+  faDesktop
+);
 const mapStateToProps = state => {
   return {
     display: state.display
@@ -38,12 +61,15 @@ class ConnectedApp extends Component {
       side_panel_width: side_panel_width
     });
   };
-  componentDidMount(){
-    api.authLogin().then((res) => {
-        console.log(res)
-    }).catch((err) => {
-    console.log(err.response)
-    });
+  componentDidMount() {
+    // api
+    //   .authLogin()
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    //   .catch(err => {
+    //     console.log(err.response);
+    //   });
   }
   render() {
     const { navbar_height, side_panel_width, active_menu } = this.props.display;
@@ -77,15 +103,17 @@ class ConnectedApp extends Component {
             </Switch>
           </Body>
           <SidePanel width={side_panel_width} top={navbar_height}>
-            <SideNav side_nav={[
-              {icon: 'book', title: 'Publishing, Comics', link: '/'},
-              {icon: 'utensils', title: 'Publishing, Comics', link: '/'},
-              {icon: 'film', title: 'Publishing, Comics', link: '/'},
-              {icon: 'headphones', title: 'Publishing, Comics', link: '/'},
-              {icon: 'gamepad', title: 'Publishing, Comics', link: '/'},
-              {icon: 'palette', title: 'Publishing, Comics', link: '/'},
-              {icon: 'desktop', title: 'Publishing, Comics', link: '/'}
-            ]}/>
+            <SideNav
+              side_nav={[
+                { icon: 'book', title: 'Publishing, Comics', link: '/' },
+                { icon: 'utensils', title: 'Publishing, Comics', link: '/' },
+                { icon: 'film', title: 'Publishing, Comics', link: '/' },
+                { icon: 'headphones', title: 'Publishing, Comics', link: '/' },
+                { icon: 'gamepad', title: 'Publishing, Comics', link: '/' },
+                { icon: 'palette', title: 'Publishing, Comics', link: '/' },
+                { icon: 'desktop', title: 'Publishing, Comics', link: '/' }
+              ]}
+            />
           </SidePanel>
           {/* Modals */}
           <UserLogin />

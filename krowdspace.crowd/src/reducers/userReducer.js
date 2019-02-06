@@ -10,7 +10,7 @@ const user = {
 export const userReducer = (state = user, action) => {
   switch (action.type) {
     case USER_LOGOUT:
-      return { ...state, active: false};
+      return { ...state, active: false };
     default:
       return state;
   }

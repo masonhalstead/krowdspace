@@ -3,10 +3,48 @@ body,
 #root {
   height: 100%;
 }
-.krowdspace-container {
-  display: flex;
-  height: 100%;
+p {
+  font-size: 14px;
 }
 a:hover {
   text-decoration: none !important;
+}
+.google-icon {
+  cursor: pointer;
+  color: #d6d6d6;
+  margin-right: 10px;
+}
+.form-control {
+  background: #fff;
+  font-size: 14px;
+  font-weight: 300;
+  height: 35px;
+}
+.form-group {
+  margin-bottom: 10px;
+}
+.btn, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-secondary:focus {
+  font-size: 13px;
+  box-shadow: none;
+}
+.btn-secondary {
+   border-color: #ced4da;
+   color: #444;
+}
+.btn-secondary:hover {
+  border-color: $primary;
+  background: #fff;
+  color: $primary;
+}
+.btn-secondary:not(:disabled):not(.disabled):active {
+  border-color: $primary;
+  background: $primary;
+  color: #fff;
+}
+label {
+  font-size: 14px;
+}
+.krowdspace-container {
+  display: flex;
+  height: 100%;
 }
