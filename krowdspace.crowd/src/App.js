@@ -8,8 +8,7 @@ import UserLogin from './components/modals/UserLogin';
 import { SideNav } from './components/common/SideNav';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
-import { setDisplay } from './actions/index';
-import { api } from '../src/resources/js/krowdspace.api';
+import { setDisplay, checkUserAuth } from './actions/index';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
@@ -45,7 +44,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    setDisplay: display => dispatch(setDisplay(display))
+    setDisplay: display => dispatch(setDisplay(display)),
+    checkUserAuth: user => dispatch(checkUserAuth(user))
   };
 };
 class ConnectedApp extends Component {
@@ -62,14 +62,7 @@ class ConnectedApp extends Component {
     });
   };
   componentDidMount() {
-    // api
-    //   .authLogin()
-    //   .then(res => {
-    //     console.log(res);
-    //   })
-    //   .catch(err => {
-    //     console.log(err.response);
-    //   });
+    this.props.checkUserAuth();
   }
   render() {
     const { navbar_height, side_panel_width, active_menu } = this.props.display;

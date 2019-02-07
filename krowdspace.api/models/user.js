@@ -25,17 +25,21 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
-  group: {
-    type: Number
+  sub: {
+    type: String,
+    required: false,
+    minlength: 5,
+    maxlength: 1024
   },
   admin: {
-    type: Boolean
+    type: Boolean,
+    required: false
   }
 });
 
 userSchema.methods.generateAuthToken = function() {
   const token = jwt.sign(
-    { _id: this._id, group: this.group, admin: this.admin },
+    { _id: this._id, admin: this.admin },
     PRIVATE_KEY
   );
   return token;
@@ -49,7 +53,7 @@ const complexityOptions = {
   upperCase: 1,
   numeric: 1,
   symbol: 1,
-  requirementCount: 4
+  requirementCount: 2
 };
 
 function validateUser(user) {
@@ -63,7 +67,8 @@ function validateUser(user) {
       .max(255)
       .required()
       .email(),
-    password: new PasswordComplexity(complexityOptions)
+    password: new PasswordComplexity(complexityOptions),
+    sub: Joi.string().optional()
   };
   return Joi.validate(user, schema);
 }

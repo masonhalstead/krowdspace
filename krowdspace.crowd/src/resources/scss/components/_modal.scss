@@ -1,49 +1,60 @@
 .user-login-modal .modal-dialog {
-    min-width: 800px
+  min-width: 800px;
+}
+.modal-close-icon {
+  color: #d3d3d3;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.modal-close-icon:hover {
+  color: $primary;
 }
 .user-login-header {
-    display: flex;
-    justify-content: center;
-    margin: 25px 0px 0px 0px;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0px 0px 0px;
 }
 .user-login-body {
-    display: flex;
-    padding: 25px 15px;
+  display: flex;
+  padding: 25px 15px;
 }
 .user-login-left {
-    width: 50%;
-    border-right: 1px solid #d6d6d6;
-    padding: 0px 25px 0px 10px;
+  width: 50%;
+  border-right: 1px solid #d6d6d6;
+  padding: 0px 25px 0px 10px;
 }
 .user-login-right {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    padding: 0px 10px 0px 25px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 0px 10px 0px 25px;
 }
 .user-login-title {
-    font-weight: 300;
-    font-size: 20px;
-    margin-bottom: 25px;
+  font-weight: 300;
+  font-size: 20px;
+  margin-bottom: 25px;
 }
 .user-welcome-text {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 .google-icon {
-    cursor: pointer;
-    color: #d6d6d6;
-    margin-right: 10px;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  }
+  cursor: pointer;
+  color: #d3d3d3;
+  margin-right: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
 
 .btn-login {
-    width: 100%;
-    margin-top: 10px;
-    height: 35px;
+  width: 100%;
+  margin-top: 10px;
+  height: 35px;
 }
-.btn-login:hover .google-icon{
-    color: $primary;
+.btn-login:hover .google-icon {
+  color: $primary;
 }
 .btn-login-text {
-    margin-right: 10px;
+  margin-right: 10px;
 }

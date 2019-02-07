@@ -2,25 +2,22 @@ import axios from 'axios';
 const { REACT_APP_HOST } = process.env;
 
 export const api = {
-  authLogin: function() {
+  publicPost: function(url, data) {
     return axios({
       method: 'post',
-      url: `${process.env.REACT_APP_HOST}/api/auth`,
+      url: `${REACT_APP_HOST}${url}`,
       headers: {
         'Content-Type': 'application/json'
       },
-      data: {
-        email: 'mason@krowdspace.com',
-        password: 'Krowdspace88!'
-      }
+      data: data
     });
   },
-  getData: function(url) {
+  getData: function(url, token) {
     return axios({
       method: 'get',
       url: `${REACT_APP_HOST}${url}`,
       headers: {
-        'x-auth-token': 'dsfsdfsdfs',
+        'x-auth-token': token,
         'Content-Type': 'application/json'
       }
     });

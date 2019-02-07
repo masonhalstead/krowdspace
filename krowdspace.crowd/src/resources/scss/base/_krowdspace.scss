@@ -23,13 +23,16 @@ a:hover {
 .form-group {
   margin-bottom: 10px;
 }
-.btn, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-secondary:focus {
+.btn,
+.btn-primary:focus,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.btn-secondary:focus {
   font-size: 13px;
   box-shadow: none;
 }
 .btn-secondary {
-   border-color: #ced4da;
-   color: #444;
+  border-color: #ced4da;
+  color: #444;
 }
 .btn-secondary:hover {
   border-color: $primary;
