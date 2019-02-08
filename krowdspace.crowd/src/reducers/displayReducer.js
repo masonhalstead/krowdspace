@@ -1,4 +1,5 @@
 import { SET_DISPLAY } from '../constants/action-types';
+
 const displayInitialState = {
   navbar_height: 44,
   side_panel_width: 46,

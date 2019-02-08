@@ -20,6 +20,7 @@ export const userReducer = (state = user, action) => {
       core.setLocalStorage(action.payload);
       return { ...state, ...action.payload, active: true };
     case USER_LOGOUT:
+      core.removeLocalStorage();
       return { ...user };
     default:
       return state;

@@ -4,7 +4,9 @@ import {
   TOGGLE_MODAL,
   USER_LOGIN,
   SET_TOKEN,
-  CHECK_USER
+  CHECK_USER,
+  LOADING,
+  ERROR_MESSAGE
 } from '../constants/action-types';
 
 export const toggleModal = modal => ({
@@ -30,4 +32,12 @@ export const setAuthToken = token => ({
 export const checkUserAuth = user => ({
   type: CHECK_USER,
   payload: user
+})
+export const setLoading = setting => ({
+  type: LOADING,
+  payload: setting
+})
+export const setError = setting => ({
+  type: ERROR_MESSAGE,
+  payload: setting
 })

@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { toggleModal, userLogin, setAuthToken } from '../../actions/';
-import Modal from 'react-bootstrap/Modal';
+import { toggleModal, userLogin, setAuthToken, setLoading } from '../../actions/';
 import { GoogleLogin } from 'react-google-login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import krowdspace from '../../resources/images/krowdspace-logo.svg';
+
+import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+
+import krowdspace from '../../resources/images/krowdspace-logo.svg';
 import { api } from '../../resources/js/krowdspace.api';
+import { core } from '../../resources/js/krowdspace.core';
+
 const { REACT_APP_GOOGLE_ID } = process.env;
 
 const mapStateToProps = state => {
@@ -20,19 +24,28 @@ const mapDispatchToProps = dispatch => {
     toggleModal: modal => dispatch(toggleModal(modal)),
     userLogin: user => dispatch(userLogin(user)),
     setAuthToken: token => dispatch(setAuthToken(token)),
+    setLoading: setting => dispatch(setLoading(setting))
   };
 };
 class ConnectedUserLogin extends Component {
   handleCloseModal = () => this.props.toggleModal({ user_login: false });
   handleGoogleAuth = res => {
-    const { setAuthToken, userLogin } = this.props;
+    const { setAuthToken, userLogin, setLoading, toggleModal } = this.props;
     const data = { token: res.tokenId };
+    
+    setLoading(true);
+
     api.publicPost('/api/auth/google', data).then((res) => {
       setAuthToken(res.data)
       return api.getData('/api/users/me', res.data);
-    }).then((res) => userLogin(res.data))
+    }).then((res) => {
+      userLogin(res.data);
+      toggleModal({ user_login: false })
+      setLoading(false);
+    })
     .catch((err) => {
-      console.log(err.response)
+      toggleModal({ user_login: false })
+      core.handleError(err)
     })
   };
   render() {

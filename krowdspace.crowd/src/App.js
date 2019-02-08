@@ -4,7 +4,8 @@ import { Body, SidePanel } from 'krowdspace.components';
 import Navigation from './components/common/Navigation';
 import CreateAccount from './components/modals/CreateAccount';
 import UserLogin from './components/modals/UserLogin';
-
+import ErrorMessage from './components/modals/ErrorMessage';
+import LoadingOverlay from './components/common/LoadingOverlay';
 import { SideNav } from './components/common/SideNav';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
@@ -108,8 +109,11 @@ class ConnectedApp extends Component {
               ]}
             />
           </SidePanel>
+          {/* Loading */}
+          <LoadingOverlay />
           {/* Modals */}
           <UserLogin />
+          <ErrorMessage />
           <CreateAccount />
         </div>
       </BrowserRouter>

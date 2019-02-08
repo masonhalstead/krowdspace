@@ -1,6 +1,9 @@
 .user-login-modal .modal-dialog {
   min-width: 800px;
 }
+.user-error-modal .modal-dialog {
+  min-width: 550px;
+}
 .modal-close-icon {
   color: #d3d3d3;
   cursor: pointer;
@@ -19,6 +22,10 @@
 .user-login-body {
   display: flex;
   padding: 25px 15px;
+}
+.user-error-body {
+  padding: 25px 15px;
+  text-align: center;
 }
 .user-login-left {
   width: 50%;
@@ -57,4 +64,7 @@
 }
 .btn-login-text {
   margin-right: 10px;
+}
+.error-message {
+  font-weight: 400;
 }
