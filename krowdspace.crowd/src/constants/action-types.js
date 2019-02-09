@@ -5,4 +5,6 @@ export const USER_LOGOUT = 'USER_LOGOUT';
 export const SET_TOKEN = 'SET_TOKEN';
 export const CHECK_USER = 'CHECK_USER';
 export const LOADING = 'LOADING';
+export const PASSWORD_RESET = 'PASSWORD_RESET';
 export const ERROR_MESSAGE = 'ERROR_MESSAGE';
+export const UPDATE_USER = 'UPDATE_USER';

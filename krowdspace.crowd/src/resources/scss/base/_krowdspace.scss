@@ -45,9 +45,19 @@ a:hover {
   color: #fff;
 }
 label {
-  font-size: 14px;
+  font-size: 13px;
 }
 .krowdspace-container {
   display: flex;
+  min-width: $ks-width;
   height: 100%;
+}
+.krowdspace-danger {
+  color: $danger
+}
+.krowdspace-warning {
+  color: $warning
+}
+.krowdspace-success {
+  color: $success
 }

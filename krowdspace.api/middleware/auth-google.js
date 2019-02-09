@@ -2,7 +2,7 @@ const { OAuth2Client } = require('google-auth-library');
 const generator = require('generate-password');
 const { GOOGLE_CLIENT_ID } = process.env;
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-const password = generator.generate({length: 10});
+const password = generator.generate({length: 10, numbers: true});
 
 module.exports = async function(req, res, next) {
     const { token } = req.body;
@@ -20,7 +20,7 @@ module.exports = async function(req, res, next) {
         email: payload.email,
         name: payload.name,
         sub: payload.sub,
-        password: password
+        password: `${password}!`
     }
     next();
     } catch (ex) {

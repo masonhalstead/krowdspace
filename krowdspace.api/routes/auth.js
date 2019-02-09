@@ -13,29 +13,20 @@ router.post("/google", google, async (req, res) => {
 
   if (error) return res.status(400).send(error.details[0].message);
   let user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("Please register an account before logging in.");
 
-  if(!user){
-    
-    user = new User(_.pick(req.body, ["name", "email", "password", "sub"]));
+  if(!user.sub){
     const salt = await bcrypt.genSalt(10);
-
-    user.password = await bcrypt.hash(user.password, salt);
-    user.sub = await bcrypt.hash(user.sub, salt);
-
+    user.sub = await bcrypt.hash(req.body.sub, salt);
     user = await user.save();
-
-    const token = user.generateAuthToken();
-
-    res.send(token);
-
-  }else{
-
-    const validSub = await bcrypt.compare(req.body.sub, user.sub);
-    if (!validSub) return res.status(400).send("Invalid email or token.");
-    const token = user.generateAuthToken();
-    res.send(token);
-
   }
+  if(user.sub){
+    const validSub = await bcrypt.compare(req.body.sub, user.sub);
+    if (!validSub) return res.status(400).send("Invalid email or password.");
+  }
+
+  const token = user.generateAuthToken();
+  res.send(token);
 
 });
 router.post("/", async (req, res) => {

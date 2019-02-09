@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
+  password_reset: {
+    type: Boolean,
+    required: false
+  },
   admin: {
     type: Boolean,
     required: false
@@ -53,7 +57,7 @@ const complexityOptions = {
   upperCase: 1,
   numeric: 1,
   symbol: 1,
-  requirementCount: 2
+  requirementCount: 3
 };
 
 function validateUser(user) {
@@ -72,6 +76,14 @@ function validateUser(user) {
   };
   return Joi.validate(user, schema);
 }
+function validatePassword(password) {
+  const schema = {
+    password: new PasswordComplexity(complexityOptions),
+  };
+
+  return Joi.validate(password, schema);
+}
 
 exports.User = User;
+exports.validatePassword = validatePassword;
 exports.validate = validateUser;

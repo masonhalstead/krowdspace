@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toggleModal, userLogin, setAuthToken, setLoading } from '../../actions/';
 import { GoogleLogin } from 'react-google-login';
+import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Modal from 'react-bootstrap/Modal';
@@ -27,27 +28,62 @@ const mapDispatchToProps = dispatch => {
     setLoading: setting => dispatch(setLoading(setting))
   };
 };
+const initial_state = {
+  email: '',
+  password: ''
+}
 class ConnectedUserLogin extends Component {
-  handleCloseModal = () => this.props.toggleModal({ user_login: false });
-  handleGoogleAuth = res => {
-    const { setAuthToken, userLogin, setLoading, toggleModal } = this.props;
-    const data = { token: res.tokenId };
-    
+  state = Object.assign({}, initial_state);
+
+  handleOnInput = (e) => this.setState({ [e.target.name]: e.target.value })
+  handleCloseModal = () => this.setState({...initial_state}, () => this.props.toggleModal({ user_login: false }));
+  handleCreateUserModal = () => this.setState({...initial_state}, () => this.props.toggleModal({ user_login: false, create_account: true }));
+  handlePost = (url, data) => {
+    const { setAuthToken, userLogin, setLoading, toggleModal, history } = this.props;
+
     setLoading(true);
 
-    api.publicPost('/api/auth/google', data).then((res) => {
-      setAuthToken(res.data)
+    api.publicPost(url, data).then((res) => {
+      // Get the token and set
+      setAuthToken(res.data);
+
+      // Return axios promise and get user data
       return api.getData('/api/users/me', res.data);
     }).then((res) => {
-      userLogin(res.data);
-      toggleModal({ user_login: false })
-      setLoading(false);
+
+      // Set initial state and handle response
+      this.setState({...initial_state}, () => {
+        userLogin(res.data);
+        toggleModal({ user_login: false });
+        setLoading(false);
+        history.push('/profile');
+      });
     })
     .catch((err) => {
-      toggleModal({ user_login: false })
-      core.handleError(err)
+
+      // Set initial state and handle response
+      this.setState({...initial_state}, () => {
+        toggleModal({ user_login: false });
+        core.handleError(err)
+      })
     })
+  }
+  handleGoogleAuth = res => {
+
+    // Only handle post if the google auth was successful
+    if(res.tokenId){
+      const data = { token: res.tokenId };  
+      this.handlePost('/api/auth/google', data);
+    } 
   };
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = this.state;
+    const data = { email, password }
+
+    // Always allow post if button is enabled
+    this.handlePost('/api/auth', data);
+  }
   render() {
     const { modals } = this.props;
     return (
@@ -73,12 +109,12 @@ class ConnectedUserLogin extends Component {
         <div className="user-login-body">
           <div className="user-login-left">
             <h2 className="user-login-title">Login to Krowdspace</h2>
-            <Form autoComplete="off">
+            <Form onSubmit={this.handleSubmit} autoComplete="off">
               <Form.Group>
-                <Form.Control type="email" placeholder="Enter email" />
+                <Form.Control type="email" name="email" onChange={(e) => this.handleOnInput(e)} placeholder="Enter email address" />
               </Form.Group>
               <Form.Group>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control type="password" name="password" onChange={(e) => this.handleOnInput(e)} placeholder="Password" />
               </Form.Group>
               <Button className="btn-login" variant="primary" type="submit">
                 Login
@@ -98,7 +134,6 @@ class ConnectedUserLogin extends Component {
                     <span className="btn-login-text">Login with Google</span>
                   </Button>
                 )}
-                buttonText="Login"
                 onSuccess={this.handleGoogleAuth}
                 onFailure={this.handleGoogleAuth}
               />
@@ -110,7 +145,7 @@ class ConnectedUserLogin extends Component {
               Welcome to Krowdspace! Create an account to submit a project or
               access extra content.
             </p>
-            <p className="user-welcome-text">Sign up now</p>
+            <p className="user-welcome-text" onClick={this.handleCreateUserModal}>Sign up now</p>
           </div>
         </div>
       </Modal>
@@ -122,4 +157,5 @@ const UserLogin = connect(
   mapStateToProps,
   mapDispatchToProps
 )(ConnectedUserLogin);
-export default UserLogin;
+const UserLoginWithRouter = withRouter(UserLogin);
+export default UserLoginWithRouter;

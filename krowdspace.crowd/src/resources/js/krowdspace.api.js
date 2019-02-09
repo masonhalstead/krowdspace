@@ -21,5 +21,27 @@ export const api = {
         'Content-Type': 'application/json'
       }
     });
+  },
+  putData: function(url, data, token) {
+    return axios({
+      method: 'put',
+      url: `${REACT_APP_HOST}${url}`,
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json'
+      },
+      data: data
+    });
+  },
+  postData: function(url, data, token) {
+    return axios({
+      method: 'post',
+      url: `${REACT_APP_HOST}${url}`,
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json'
+      },
+      data: data
+    });
   }
 };

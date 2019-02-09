@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-class HubWrapper extends Component {
+class HomeWrapper extends Component {
   render() {
     return (
-      <Scrollbars autoHide={false} className="advertiser-campaigns-body-fixed">
+      <React.Fragment>
         <div className="hub-wrapper">
-          <h1>Krowdspace Hub</h1>
+          <h1>Krowdspace</h1>
           <p>
             At Krowdspace, our goal is to unify the crowdfunding community.
             Krowdspace members will receive exclusive rewards for backing
@@ -14,8 +13,8 @@ class HubWrapper extends Component {
             level.
           </p>
         </div>
-      </Scrollbars>
+        </React.Fragment>
     );
   }
 }
-export default HubWrapper;
+export default HomeWrapper;

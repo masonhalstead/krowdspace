@@ -5,6 +5,7 @@ body {
   position: fixed;
   width: 100%;
   background: #fff;
+  min-width: $ks-width;
   border-bottom: 1px solid #c0c0c0;
   font-size: 14px;
   color: #444;
@@ -16,6 +17,7 @@ body {
 .logo-block {
   display: flex;
   align-items: center;
+  width: 300px;
 }
 .logo-image {
   display: block;
@@ -28,6 +30,7 @@ body {
 }
 .navigation-item {
   color: #444;
+  font-weight: 400;
   margin: 0px 20px;
 }
 .navigation-item:hover {
@@ -36,7 +39,9 @@ body {
 }
 .actions-block {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
+  width: 300px
 }
 .action-wrapper {
   display: flex;

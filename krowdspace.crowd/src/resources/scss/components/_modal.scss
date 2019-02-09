@@ -4,6 +4,11 @@
 .user-error-modal .modal-dialog {
   min-width: 550px;
 }
+.user-create-modal .modal-dialog,
+.user-password-modal .modal-dialog {
+  min-width: 400px;
+  max-width: 400px;
+}
 .modal-close-icon {
   color: #d3d3d3;
   cursor: pointer;
@@ -27,6 +32,9 @@
   padding: 25px 15px;
   text-align: center;
 }
+.user-create-body {
+  padding: 25px 15px;
+}
 .user-login-left {
   width: 50%;
   border-right: 1px solid #d6d6d6;
@@ -38,13 +46,29 @@
   width: 50%;
   padding: 0px 10px 0px 25px;
 }
-.user-login-title {
+.user-login-title,
+.user-create-title {
   font-weight: 300;
   font-size: 20px;
   margin-bottom: 25px;
 }
+.user-create-title {
+  text-align: center;
+}
+.user-password-container {
+  display: flex;
+  justify-content: space-between;
+}
+.user-password-label {
+  flex-grow: 1
+}
 .user-welcome-text {
+  color: $primary;
+  cursor: pointer;
   flex-grow: 1;
+}
+.user-welcome-text:hover {
+  color: darken($primary, 10%);
 }
 .google-icon {
   cursor: pointer;

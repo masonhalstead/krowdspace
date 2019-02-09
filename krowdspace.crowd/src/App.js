@@ -7,6 +7,7 @@ import UserLogin from './components/modals/UserLogin';
 import ErrorMessage from './components/modals/ErrorMessage';
 import LoadingOverlay from './components/common/LoadingOverlay';
 import { SideNav } from './components/common/SideNav';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay, checkUserAuth } from './actions/index';
@@ -40,7 +41,8 @@ library.add(
 );
 const mapStateToProps = state => {
   return {
-    display: state.display
+    display: state.display,
+    user: state.user
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -67,6 +69,7 @@ class ConnectedApp extends Component {
   }
   render() {
     const { navbar_height, side_panel_width, active_menu } = this.props.display;
+    const { active } = this.props.user;
     return (
       <BrowserRouter basename="/">
         <div className="krowdspace-container">
@@ -90,11 +93,16 @@ class ConnectedApp extends Component {
             ]}
           />
           <Body width={side_panel_width} top={navbar_height}>
-            <Switch>
-              <Route exact path="/hub" component={async.HubWrapper} />
-              <Redirect exact from="/" push to="/hub" />
-              <Route component={async.HubWrapper} />
-            </Switch>
+            <Scrollbars autoHide={false}>
+              <Switch>
+                <Route exact path="/" component={async.HomeWrapper} />
+                { active ?
+                <Route exact path="/profile" component={async.ProfileWrapper} /> :
+                <Redirect from="/profile" push to="/" />
+                }
+                <Route component={async.HomeWrapper} />
+              </Switch>
+            </Scrollbars>
           </Body>
           <SidePanel width={side_panel_width} top={navbar_height}>
             <SideNav
