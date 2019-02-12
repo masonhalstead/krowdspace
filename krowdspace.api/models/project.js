@@ -1,5 +1,5 @@
-const Joi = require("joi");
-const mongoose = require("mongoose");
+const Joi = require('joi');
+const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
   domain: {
@@ -91,7 +91,7 @@ const projectSchema = new mongoose.Schema({
   }
 });
 
-const Project = mongoose.model("Projects", projectSchema);
+const Project = mongoose.model('Projects', projectSchema);
 
 function validateProject(project) {
   const schema = {

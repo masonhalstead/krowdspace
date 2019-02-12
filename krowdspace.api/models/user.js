@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const PasswordComplexity = require("joi-password-complexity");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
+const Joi = require('joi');
+const PasswordComplexity = require('joi-password-complexity');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const { PRIVATE_KEY } = process.env;
 
@@ -39,9 +39,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: false
   },
-  projects: [{ 
-    type : mongoose.Schema.Types.ObjectId, 
-    ref: 'Projects' }
+  projects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Projects'
+    }
   ],
   password_reset: {
     type: Boolean,
@@ -50,13 +52,10 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign(
-    { _id: this._id, admin: this.admin },
-    PRIVATE_KEY
-  );
+  const token = jwt.sign({ _id: this._id, admin: this.admin }, PRIVATE_KEY);
   return token;
 };
-const User = mongoose.model("Users", userSchema);
+const User = mongoose.model('Users', userSchema);
 
 const complexityOptions = {
   min: 8,
@@ -86,7 +85,7 @@ function validateUser(user) {
 }
 function validatePassword(password) {
   const schema = {
-    password: new PasswordComplexity(complexityOptions),
+    password: new PasswordComplexity(complexityOptions)
   };
 
   return Joi.validate(password, schema);
