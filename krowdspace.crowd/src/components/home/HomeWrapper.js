@@ -4,7 +4,7 @@ class HomeWrapper extends Component {
     return (
       <React.Fragment>
         <div className="hub-wrapper">
-          <h1>Krowdspace</h1>
+          <h1>Back the Project, not the Platform</h1>
           <p>
             At Krowdspace, our goal is to unify the crowdfunding community.
             Krowdspace members will receive exclusive rewards for backing
@@ -13,7 +13,7 @@ class HomeWrapper extends Component {
             level.
           </p>
         </div>
-        </React.Fragment>
+      </React.Fragment>
     );
   }
 }

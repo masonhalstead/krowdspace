@@ -5,6 +5,7 @@ import Navigation from './components/common/Navigation';
 import CreateAccount from './components/modals/CreateAccount';
 import UserLogin from './components/modals/UserLogin';
 import ErrorMessage from './components/modals/ErrorMessage';
+import SubmitProject from './components/modals/SubmitProject';
 import LoadingOverlay from './components/common/LoadingOverlay';
 import { SideNav } from './components/common/SideNav';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -23,7 +24,10 @@ import {
   faUtensils,
   faFilm,
   faPalette,
-  faDesktop
+  faDesktop,
+  faSignInAlt,
+  faEllipsisH,
+  faLongArrowAltLeft
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   far,
@@ -37,7 +41,10 @@ library.add(
   faUtensils,
   faFilm,
   faPalette,
-  faDesktop
+  faDesktop,
+  faSignInAlt,
+  faEllipsisH,
+  faLongArrowAltLeft
 );
 const mapStateToProps = state => {
   return {
@@ -52,24 +59,62 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class ConnectedApp extends Component {
+  state = {
+    navigation: [
+      {
+        name: 'Explore',
+        link: '/explore',
+        type: 'link'
+      },
+      {
+        name: 'Project Submission',
+        link: 'submit_project',
+        type: 'modal'
+      },
+      {
+        name: 'Resources',
+        link: '/',
+        type: 'link'
+      }
+    ],
+    side_nav: [
+      { icon: 'book', title: 'Publishing, Comics', link: '/' },
+      { icon: 'utensils', title: 'Publishing, Comics', link: '/' },
+      { icon: 'film', title: 'Publishing, Comics', link: '/' },
+      { icon: 'headphones', title: 'Publishing, Comics', link: '/' },
+      { icon: 'gamepad', title: 'Publishing, Comics', link: '/' },
+      { icon: 'palette', title: 'Publishing, Comics', link: '/' },
+      { icon: 'desktop', title: 'Publishing, Comics', link: '/' }
+    ]
+  };
   handleMenuClick = () => {
+    const { setDisplay } = this.props;
     let { active_menu, side_panel_width } = this.props.display;
 
     // Check to see if side panel has a width
     side_panel_width = !!side_panel_width ? 0 : 46;
 
     // Set display properties
-    this.props.setDisplay({
+    setDisplay({
       active_menu: !active_menu,
       side_panel_width: side_panel_width
     });
   };
   componentDidMount() {
-    this.props.checkUserAuth();
+    const { checkUserAuth } = this.props;
+    checkUserAuth();
   }
   render() {
-    const { navbar_height, side_panel_width, active_menu } = this.props.display;
+    const { navigation, side_nav } = this.state;
     const { active } = this.props.user;
+    const { navbar_height, side_panel_width, active_menu } = this.props.display;
+    const PrivateRoutes = () => {
+      return active ? (
+        <Route exact path="/profile" component={async.ProfileWrapper} />
+      ) : (
+        <Redirect from="/profile" push to="/" />
+      );
+    };
     return (
       <BrowserRouter basename="/">
         <div className="krowdspace-container">
@@ -77,45 +122,19 @@ class ConnectedApp extends Component {
             active_menu={active_menu}
             handleMenuClick={this.handleMenuClick}
             padding={5}
-            navigation={[
-              {
-                name: 'Games',
-                link: '/explore'
-              },
-              {
-                name: 'Crowdfunding',
-                link: '/'
-              },
-              {
-                name: 'Sports',
-                link: '/'
-              }
-            ]}
+            navigation={navigation}
           />
           <Body width={side_panel_width} top={navbar_height}>
             <Scrollbars autoHide={false}>
               <Switch>
                 <Route exact path="/" component={async.HomeWrapper} />
-                { active ?
-                <Route exact path="/profile" component={async.ProfileWrapper} /> :
-                <Redirect from="/profile" push to="/" />
-                }
+                <PrivateRoutes />
                 <Route component={async.HomeWrapper} />
               </Switch>
             </Scrollbars>
           </Body>
           <SidePanel width={side_panel_width} top={navbar_height}>
-            <SideNav
-              side_nav={[
-                { icon: 'book', title: 'Publishing, Comics', link: '/' },
-                { icon: 'utensils', title: 'Publishing, Comics', link: '/' },
-                { icon: 'film', title: 'Publishing, Comics', link: '/' },
-                { icon: 'headphones', title: 'Publishing, Comics', link: '/' },
-                { icon: 'gamepad', title: 'Publishing, Comics', link: '/' },
-                { icon: 'palette', title: 'Publishing, Comics', link: '/' },
-                { icon: 'desktop', title: 'Publishing, Comics', link: '/' }
-              ]}
-            />
+            <SideNav side_nav={side_nav} />
           </SidePanel>
           {/* Loading */}
           <LoadingOverlay />
@@ -123,6 +142,7 @@ class ConnectedApp extends Component {
           <UserLogin />
           <ErrorMessage />
           <CreateAccount />
+          <SubmitProject />
         </div>
       </BrowserRouter>
     );

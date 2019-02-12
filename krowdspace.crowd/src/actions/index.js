@@ -30,24 +30,24 @@ export const userLogout = user => ({
 export const setAuthToken = token => ({
   type: SET_TOKEN,
   payload: token
-})
+});
 export const checkUserAuth = user => ({
   type: CHECK_USER,
   payload: user
-})
+});
 export const setLoading = setting => ({
   type: LOADING,
   payload: setting
-})
+});
 export const setError = setting => ({
   type: ERROR_MESSAGE,
   payload: setting
-})
+});
 export const togglePasswordReset = user => ({
   type: PASSWORD_RESET,
   payload: user
-})
+});
 export const updateUser = user => ({
   type: UPDATE_USER,
   payload: user
-})
+});

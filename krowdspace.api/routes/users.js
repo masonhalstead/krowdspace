@@ -7,7 +7,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password");
+  const user = await User.findById(req.user._id).populate('projects').select("-password");
   res.send(user);
 });
 router.put("/password-reset", auth, async (req, res) => {
@@ -46,7 +46,7 @@ router.post("/google", google, async (req, res) => {
   res.send(token);
 
 });
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

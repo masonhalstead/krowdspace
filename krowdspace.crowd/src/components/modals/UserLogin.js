@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { toggleModal, userLogin, setAuthToken, setLoading } from '../../actions/';
+import {
+  toggleModal,
+  userLogin,
+  setAuthToken,
+  setLoading
+} from '../../actions/';
 import { GoogleLogin } from 'react-google-login';
 import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,59 +36,71 @@ const mapDispatchToProps = dispatch => {
 const initial_state = {
   email: '',
   password: ''
-}
+};
 class ConnectedUserLogin extends Component {
   state = Object.assign({}, initial_state);
 
-  handleOnInput = (e) => this.setState({ [e.target.name]: e.target.value })
-  handleCloseModal = () => this.setState({...initial_state}, () => this.props.toggleModal({ user_login: false }));
-  handleCreateUserModal = () => this.setState({...initial_state}, () => this.props.toggleModal({ user_login: false, create_account: true }));
+  handleOnInput = e => this.setState({ [e.target.name]: e.target.value });
+  handleCloseModal = () =>
+    this.setState({ ...initial_state }, () =>
+      this.props.toggleModal({ user_login: false })
+    );
+  handleCreateUserModal = () =>
+    this.setState({ ...initial_state }, () =>
+      this.props.toggleModal({ user_login: false, create_account: true })
+    );
   handlePost = (url, data) => {
-    const { setAuthToken, userLogin, setLoading, toggleModal, history } = this.props;
+    const {
+      setAuthToken,
+      userLogin,
+      setLoading,
+      toggleModal,
+      history
+    } = this.props;
 
     setLoading(true);
 
-    api.publicPost(url, data).then((res) => {
-      // Get the token and set
-      setAuthToken(res.data);
+    api
+      .publicPost(url, data)
+      .then(res => {
+        // Get the token and set
+        setAuthToken(res.data);
 
-      // Return axios promise and get user data
-      return api.getData('/api/users/me', res.data);
-    }).then((res) => {
-
-      // Set initial state and handle response
-      this.setState({...initial_state}, () => {
-        userLogin(res.data);
-        toggleModal({ user_login: false });
-        setLoading(false);
-        history.push('/profile');
-      });
-    })
-    .catch((err) => {
-
-      // Set initial state and handle response
-      this.setState({...initial_state}, () => {
-        toggleModal({ user_login: false });
-        core.handleError(err)
+        // Return axios promise and get user data
+        return api.getData('/api/users/me', res.data);
       })
-    })
-  }
-  handleGoogleAuth = res => {
-
-    // Only handle post if the google auth was successful
-    if(res.tokenId){
-      const data = { token: res.tokenId };  
-      this.handlePost('/api/auth/google', data);
-    } 
+      .then(res => {
+        // Set initial state and handle response
+        this.setState({ ...initial_state }, () => {
+          userLogin(res.data);
+          toggleModal({ user_login: false });
+          setLoading(false);
+          history.push('/profile');
+        });
+      })
+      .catch(err => {
+        // Set initial state and handle response
+        this.setState({ ...initial_state }, () => {
+          toggleModal({ user_login: false });
+          core.handleError(err);
+        });
+      });
   };
-  handleSubmit = (e) => {
+  handleGoogleAuth = res => {
+    // Only handle post if the google auth was successful
+    if (res.tokenId) {
+      const data = { token: res.tokenId };
+      this.handlePost('/api/auth/google', data);
+    }
+  };
+  handleSubmit = e => {
     e.preventDefault();
     const { email, password } = this.state;
-    const data = { email, password }
+    const data = { email, password };
 
     // Always allow post if button is enabled
     this.handlePost('/api/auth', data);
-  }
+  };
   render() {
     const { modals } = this.props;
     return (
@@ -92,12 +109,12 @@ class ConnectedUserLogin extends Component {
         show={modals.user_login}
         onHide={this.handleCloseModal}
       >
-      <FontAwesomeIcon
-              onClick={this.handleCloseModal}
-              className="modal-close-icon"
-              icon={['fas', 'times']}
-              size="sm"
-            />
+        <FontAwesomeIcon
+          onClick={this.handleCloseModal}
+          className="modal-close-icon"
+          icon={['fas', 'times']}
+          size="sm"
+        />
         <div className="user-login-header">
           <img
             className="logo-image"
@@ -111,10 +128,20 @@ class ConnectedUserLogin extends Component {
             <h2 className="user-login-title">Login to Krowdspace</h2>
             <Form onSubmit={this.handleSubmit} autoComplete="off">
               <Form.Group>
-                <Form.Control type="email" name="email" onChange={(e) => this.handleOnInput(e)} placeholder="Enter email address" />
+                <Form.Control
+                  type="email"
+                  name="email"
+                  onChange={e => this.handleOnInput(e)}
+                  placeholder="Enter email address"
+                />
               </Form.Group>
               <Form.Group>
-                <Form.Control type="password" name="password" onChange={(e) => this.handleOnInput(e)} placeholder="Password" />
+                <Form.Control
+                  type="password"
+                  name="password"
+                  onChange={e => this.handleOnInput(e)}
+                  placeholder="Password"
+                />
               </Form.Group>
               <Button className="btn-login" variant="primary" type="submit">
                 Login
@@ -145,7 +172,12 @@ class ConnectedUserLogin extends Component {
               Welcome to Krowdspace! Create an account to submit a project or
               access extra content.
             </p>
-            <p className="user-welcome-text" onClick={this.handleCreateUserModal}>Sign up now</p>
+            <p
+              className="user-welcome-text"
+              onClick={this.handleCreateUserModal}
+            >
+              Sign up now
+            </p>
           </div>
         </div>
       </Modal>

@@ -4,6 +4,7 @@ body {
 .navigation-container {
   position: fixed;
   width: 100%;
+  z-index: 1;
   background: #fff;
   min-width: $ks-width;
   border-bottom: 1px solid #c0c0c0;
@@ -41,7 +42,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 300px
+  width: 300px;
 }
 .action-wrapper {
   display: flex;
@@ -61,5 +62,5 @@ body {
   color: #4472f8;
 }
 .navigation-btn {
-  margin: 0px 15px;
+  margin: 0px 30px 0px 15px;
 }

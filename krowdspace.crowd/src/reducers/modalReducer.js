@@ -3,7 +3,8 @@ import { TOGGLE_MODAL } from '../constants/action-types';
 const modals = {
   create_account: false,
   user_login: false,
-  user_error: false
+  user_error: false,
+  submit_project: false
 };
 export const modalReducer = (state = modals, action) => {
   switch (action.type) {

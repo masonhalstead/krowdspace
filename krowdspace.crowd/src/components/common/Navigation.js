@@ -25,9 +25,6 @@ class ConnectedNavigation extends Component {
   createUser = () => {
     return (
       <React.Fragment>
-        <p onClick={this.handleUserLogin} className="navigation-item">
-          Sign In
-        </p>
         <Button
           onClick={this.handleCreateAccount}
           className="navigation-btn"
@@ -35,6 +32,20 @@ class ConnectedNavigation extends Component {
         >
           Create Account
         </Button>
+        <div className="action-wrapper" onClick={this.handleUserLogin}>
+          <FontAwesomeIcon
+            icon={['fas', 'user-circle']}
+            className="action-icon"
+            size="lg"
+          />
+        </div>
+        <div className="action-wrapper" onClick={this.handleUserLogin}>
+          <FontAwesomeIcon
+            icon={['fas', 'ellipsis-v']}
+            className="action-icon"
+            size="lg"
+          />
+        </div>
       </React.Fragment>
     );
   };
@@ -96,11 +107,17 @@ class ConnectedNavigation extends Component {
           </div>
           <div className="navigation-block" style={style.navigation_block}>
             {navigation.map((item, index) => {
-              return (
-                <Link to={item.link} key={index}>
+              switch(item.type) {
+                case 'link':
+                  return <Link to={item.link} key={index}>
                   <p className="navigation-item">{item.name}</p>
                 </Link>
-              );
+                case 'modal':
+                  return <p key={index} onClick={() => this.props.toggleModal({ [item.link]: true })} className="navigation-item">{item.name}</p>
+                
+                default:
+                  return null
+              }
             })}
           </div>
           <div className="actions-block">

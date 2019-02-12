@@ -2,15 +2,15 @@ import store from '../../store/index';
 import { toggleModal, setError, setLoading } from '../../actions/index';
 
 export const core = {
-    getLocalStorage: function() {
+  getLocalStorage: function() {
     return {
-        name: localStorage.getItem('name') || false,
-        email: localStorage.getItem('email') || false,
-        password_reset: localStorage.getItem('password_reset') || false,
-        active: !!localStorage.getItem('token'),
-        token: localStorage.getItem('token') || false,
-        _id: localStorage.getItem('_id') || false
-    }
+      name: localStorage.getItem('name') || false,
+      email: localStorage.getItem('email') || false,
+      password_reset: localStorage.getItem('password_reset') || false,
+      active: !!localStorage.getItem('token'),
+      token: localStorage.getItem('token') || false,
+      _id: localStorage.getItem('_id') || false
+    };
   },
   setLocalStorage: function(state) {
     localStorage.setItem('name', state.name);
@@ -39,16 +39,17 @@ export const core = {
     state.password_strength = 0;
 
     // Checking for special characters
-    if(/[!@#$%^&*(),.?":{}|<>]/.test(state.password))state.password_strength++
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(state.password))
+      state.password_strength++;
 
     // Checking for numbers
-    if(/[0-9]/.test(state.password))state.password_strength++
+    if (/[0-9]/.test(state.password)) state.password_strength++;
 
     // Checking for uppercase letters
-    if(/[A-Z]/.test(state.password))state.password_strength++
+    if (/[A-Z]/.test(state.password)) state.password_strength++;
 
     // Checking for lowercase letters
-    if(/[a-z]/.test(state.password))state.password_strength++
+    if (/[a-z]/.test(state.password)) state.password_strength++;
 
     return state;
   }

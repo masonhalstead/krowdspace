@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import PasswordReset from '../modals/PasswordReset';
+import Button from 'react-bootstrap/Button';
 class ProfileWrapper extends Component {
   render() {
     return (
-    <React.Fragment>
-    <div className="hub-wrapper">
-        <h1>Krowdspace</h1>
-        <p>
-        At Krowdspace, our goal is to unify the crowdfunding community.
-        Krowdspace members will receive exclusive rewards for backing
-        projects and project owners gain access to our easy to use
-        promotional tools and resources to take their campaigns to the next
-        level.
-        </p>
-    </div>
-    <PasswordReset />
-    </React.Fragment>
+      <React.Fragment>
+        <div
+          style={{ display: 'flex', background: '#fff', padding: '25px 15px' }}
+        >
+          <div style={{ width: '30%' }} />
+          <div style={{ width: '70%' }}>
+            <p style={{ margin: '0px' }}>mason@krowdspace.com</p>
+            <p style={{ margin: '0px' }}>Mason Halstead</p>
+            <Button variant="primary" type="submit">
+              Submit Project
+            </Button>
+          </div>
+        </div>
+        <PasswordReset />
+      </React.Fragment>
     );
   }
 }

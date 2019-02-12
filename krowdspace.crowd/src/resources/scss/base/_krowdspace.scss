@@ -16,7 +16,7 @@ a:hover {
 }
 .form-control {
   background: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   height: 35px;
 }
@@ -53,11 +53,14 @@ label {
   height: 100%;
 }
 .krowdspace-danger {
-  color: $danger
+  color: $danger;
 }
 .krowdspace-warning {
-  color: $warning
+  color: $warning;
 }
 .krowdspace-success {
-  color: $success
+  color: $success;
+}
+.capitalize {
+  text-transform: capitalize
 }

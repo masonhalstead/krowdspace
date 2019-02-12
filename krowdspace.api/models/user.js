@@ -31,11 +31,19 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
-  password_reset: {
+  admin: {
     type: Boolean,
     required: false
   },
-  admin: {
+  project_owner: {
+    type: Boolean,
+    required: false
+  },
+  projects: [{ 
+    type : mongoose.Schema.Types.ObjectId, 
+    ref: 'Projects' }
+  ],
+  password_reset: {
     type: Boolean,
     required: false
   }

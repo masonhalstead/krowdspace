@@ -27,12 +27,12 @@ class ConnectedErrorMessage extends Component {
         show={modals.user_error}
         onHide={this.handleCloseModal}
       >
-      <FontAwesomeIcon
-              onClick={this.handleCloseModal}
-              className="modal-close-icon"
-              icon={['fas', 'times']}
-              size="sm"
-            />
+        <FontAwesomeIcon
+          onClick={this.handleCloseModal}
+          className="modal-close-icon"
+          icon={['fas', 'times']}
+          size="sm"
+        />
         <div className="user-login-header">
           <img
             className="logo-image"
@@ -42,10 +42,12 @@ class ConnectedErrorMessage extends Component {
           />
         </div>
         <div className="user-error-body">
-            <p>
-              Looks like you ran into an error trying to connect to our servers. If the error continues please reach out to Krowdspace directly through our social media channels.
-            </p>
-            { error && <p className="error-message">{error}</p> }
+          <p>
+            Looks like you ran into an error trying to connect to our servers.
+            If the error continues please reach out to Krowdspace directly
+            through our social media channels.
+          </p>
+          {error && <p className="error-message">{error}</p>}
         </div>
       </Modal>
     );
