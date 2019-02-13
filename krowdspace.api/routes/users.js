@@ -2,14 +2,22 @@ const _ = require('lodash');
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const google = require('../middleware/auth-google');
+const { Project } = require('../models/project');
 const { User, validate, validatePassword } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
 router.get('/me', auth, async (req, res) => {
-  const user = await User.findById(req.user._id)
-    .populate('projects')
-    .select('-password');
+  const project_count = await Project.find().count();
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      project_count: project_count
+    },
+    {
+      new: true
+    }
+  );
   res.send(user);
 });
 router.put('/password-reset', auth, async (req, res) => {
@@ -26,7 +34,7 @@ router.put('/password-reset', auth, async (req, res) => {
 
   if (!user) return res.status(404).send('The user was not found.');
 
-  res.status(200);
+  res.status(200).send('Password set successful.');
 });
 router.post('/google', google, async (req, res) => {
   const { error } = validate(req.body);
@@ -35,8 +43,7 @@ router.post('/google', google, async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send('User is already registered.');
 
-  user = new User(_.pick(req.body, ['name', 'email', 'password', 'sub']));
-  user.password_reset = true;
+  user = new User(req.body);
   const salt = await bcrypt.genSalt(10);
   user.sub = await bcrypt.hash(user.sub, salt);
   user.password = await bcrypt.hash(user.password, salt);

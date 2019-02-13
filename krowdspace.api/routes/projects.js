@@ -1,7 +1,9 @@
 const auth = require('../middleware/auth');
-const project = require('../middleware/project-link');
+const seperate = require('../middleware/project-seperate');
 const group = require('../middleware/group');
 const { User } = require('../models/user');
+const { Funding } = require('../models/funding');
+const { Creator } = require('../models/creator');
 const { Project, validate } = require('../models/project');
 const express = require('express');
 const router = express.Router();
@@ -11,26 +13,54 @@ router.get('/', auth, async (req, res) => {
   res.send(projects);
 });
 
-router.post('/create', auth, project, async (req, res) => {
-  const { error } = validate(req.body);
+router.get('/featured', auth, async (req, res) => {
+  const projects = await Project.find(
+    { featured: true },
+    'name image_url uri description'
+  );
+  if (!projects) return res.send([]);
 
+  res.send(projects);
+});
+
+router.post('/create', auth, seperate, async (req, res) => {
+  const { error } = validate(req.body);
+  let { user_id, creator_id, project, funding } = req.body;
   if (error) return res.status(400).send(error.details[0].message);
 
-  let campaign = await Project.findOne({ project_id: req.body.project_id });
-  if (campaign) return res.status(400).send('Project is already registered.');
+  let user = await User.findById(user_id);
+  if (!user) return res.status(400).send('User has not been registered.');
 
-  campaign = new Project(req.body);
-  campaign = await campaign.save();
+  let creator = await Creator.findById(creator_id);
+  if (!creator) creator = new Creator(req.body.creator);
 
-  let user = await User.findById(campaign.owner);
-  if (!user) return res.status(400).send('The user was not found.');
+  project = await Project.findOne({ domain_id: project.domain_id });
+  if (project) return res.status(400).send('Project is already registered.');
 
-  user.projects.push(campaign._id);
-  user.project_owner = true;
+  funding = new Funding(funding);
+  project = new Project(req.body.project);
 
+  project.user_id = user._id;
+  project.creator_id = creator._id;
+  project.funding_id = funding._id;
+
+  creator.projects.push(project._id);
+  creator.user_id = user._id;
+
+  user.creator_id = creator._id;
+  user.projects.push(project._id);
+
+  funding.project_id = project._id;
+  funding.creator_id = creator._id;
+  funding.user_id = user._id;
+
+  creator = await creator.save();
+  funding = await funding.save();
   user = await user.save();
+  project = await project.save();
 
-  res.send(campaign);
+  const token = user.generateAuthToken();
+  res.status(200).send(token);
 });
 
 router.put('/:id', [auth, group], async (req, res) => {

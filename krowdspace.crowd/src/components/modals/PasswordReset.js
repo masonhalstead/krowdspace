@@ -64,7 +64,7 @@ class ConnectedPasswordReset extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-    const { setLoading, user, updateUser } = this.props;
+    const { setLoading, user } = this.props;
     const { password } = this.state;
     const data = { password };
 
@@ -77,14 +77,14 @@ class ConnectedPasswordReset extends Component {
         // Set initial state and handle response
         this.setState({ ...initial_state }, () => {
           localStorage.setItem('password_reset', false);
-          updateUser({ password_reset: false });
+          this.handleCloseModal();
           setLoading(false);
         });
       })
       .catch(err => {
         // Set initial state and handle response
         this.setState({ ...initial_state }, () => {
-          updateUser({ password_reset: false });
+          this.handleCloseModal();
           core.handleError(err);
         });
       });

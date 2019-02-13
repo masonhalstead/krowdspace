@@ -2,7 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-const category_selector = [{
+const categories = [{
     key:'Art',
     id: 1
   },{
@@ -40,19 +40,19 @@ const category_selector = [{
     id: 12
   }]
 
-export const ChooseCategories = ({domain, categories, handleCheckCategory, chooseToggleScreen}) => {
+export const ChooseCategories = ({domain, category, handleCheckCategory, chooseToggleScreen}) => {
     return (
     <React.Fragment>
-    <h2 className="user-create-title">Select Maximum 3 Categories</h2>
+    <h2 className="user-create-title">Select a category</h2>
     <Form.Group className="user-checkbox-flex">
-      {category_selector.map((category) => {
+      {categories.map((cat) => {
         return <Form.Check
         type="checkbox"
         className="user-checkbox-item"
-        key={category.id}
-        onChange={() => handleCheckCategory(category.id)}
-        label={category.key}
-        checked={categories.includes(category.id)}
+        key={cat.id}
+        onChange={() => handleCheckCategory(cat.key)}
+        label={cat.key}
+        checked={category === cat.key}
       />
       })}
     </Form.Group>
@@ -61,7 +61,7 @@ export const ChooseCategories = ({domain, categories, handleCheckCategory, choos
       variant="primary"
       type="button"
       onClick={() => chooseToggleScreen({toggle: 2})}
-      disabled={(!categories.length || categories.length > 3)}
+      disabled={!category}
     >
       Confirm <span className="capitalize">{domain}</span> categories
     </Button>

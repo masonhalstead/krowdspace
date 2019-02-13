@@ -20,6 +20,7 @@ module.exports = async function(req, res, next) {
       email: payload.email,
       name: payload.name,
       sub: payload.sub,
+      password_reset: true,
       password: `${password}!`
     };
     next();

@@ -43,5 +43,31 @@ export const api = {
       },
       data: data
     });
-  }
+  },
+  getProfileData: function(token) {
+    return axios
+      .all([
+        this.getData('/api/users/me', token),
+        this.getData('/api/projects/featured', token)
+      ])
+      .then(
+        axios.spread(
+          (
+            user,
+            featured_projects
+          ) => {
+            const { kickstarter_user, indiegogo_user } = user.data;
+            user = {
+              ...user.data,
+              kickstarter_user: kickstarter_user === null ? '' : kickstarter_user,
+              indiegogo_user: indiegogo_user === null ? '' : indiegogo_user
+            }
+            return {
+              user: user,
+              featured_projects: featured_projects.data
+            }
+          }
+        )
+      );
+    },
 };

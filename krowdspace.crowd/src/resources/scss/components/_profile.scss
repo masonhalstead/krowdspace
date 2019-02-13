@@ -1,0 +1,32 @@
+
+.profile-right-container {
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+    padding: 0px 15px;
+    flex-wrap: wrap;
+}
+.profile-right-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+}
+.profile-metric-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 30px;
+    color: $primary;
+    background: lighten($primary, 30%);
+    padding: 6px 5px 5px 5px;
+    border-radius: 15px;
+}
+.profile-metric-content {
+    margin: 0px 10px;
+}
+.profile-metric-content p {
+    margin: 0px;
+    font-size: 13px;
+    line-height: 1.2;
+}

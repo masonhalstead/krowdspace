@@ -2,8 +2,8 @@ const request = require('request-promise');
 const $ = require('cheerio');
 
 kickstarter = async req => {
-  const { normalized_url, domain, url, categories } = req.body;
-  const { _id } = req.user;
+  const { normalized_url, domain, category } = req.body;
+  const { _id, creator_id } = req.user;
   return request(normalized_url).then(html => {
     const project_data = $('#react-project-header', html).attr('data-initial');
     const project_object = JSON.parse(project_data);
@@ -20,34 +20,50 @@ kickstarter = async req => {
 
     const project_cleaned = project_cheerio.html();
     const { project } = project_object;
+    const { video } = project;
     return {
-      domain,
-      url,
-      normalized_url,
-      categories,
-      owner: _id,
-      project_id: project.id || null,
-      name: project.name || null,
-      image_url: project.imageUrl || null,
-      currency: project.currency || null,
-      currency_symbol: project.goal.symbol || null,
-      project: project_cleaned || null,
-      creator_name: project.creator.name || null,
-      creator_image_url: project.creator.imageUrl || null,
-      creator_profile: project.creator.biography || null,
-      backers: project.backersCount || null,
-      funded: project.percentFunded || null,
-      location: project.location.displayableName || null,
-      project_count: project.creator.createdProjects.totalCount || null,
-      website: project.creator.websites || null,
-      description: project.description || null,
-      video_url: project.video.videoSources.base.src || null,
-      video_img_url: project.video.previewImageUrl || null,
-      goal: project.goal.amount || null,
-      pledged: project.pledged.amount || null,
-      state: project.state || null,
-      deadline: project.deadlineAt || null,
-      project_url: project.url || null
+      user_id: _id,
+      creator_id: creator_id,
+      project: {
+        likes: 0,
+        views: 0,
+        uri: project.pid || parseInt(Math.random() * 10000000, 10),
+        featured: false,
+        domain_id: project.id || undefined,
+        domain: domain || undefined,
+        category: category || undefined,
+        short_link: project.projectShortLink || undefined,
+        url: project.url || undefined,
+        duration: project.duration || 0,
+        deadline: project.deadlineAt || 0,
+        state: project.state || undefined,
+        description: project.description || undefined,
+        name: project.name || undefined,
+        image_url: project.imageUrl || undefined,
+        content: project_cleaned || undefined,
+        video: video ? [video.videoSources] : [],
+        video_image_url: video ? video.previewImageUrl : undefined,
+        location: project.location.displayableName || undefined
+      },
+      creator: {
+        domain: domain || undefined,
+        name: project.creator.name || undefined,
+        websites: project.creator.websites || undefined,
+        image_url: project.creator.imageUrl || undefined,
+        biography: project.creator.biography || undefined,
+        project_count: project.creator.createdProjects.totalCount || 0,
+        location: project.location.displayableName || undefined
+      },
+      funding: {
+        project: project.id || undefined,
+        currency: project.currency || undefined,
+        currency_symbol: project.goal.symbol || undefined,
+        date: [new Date()],
+        backers: [project.backersCount] || 0,
+        funded: [project.percentFunded] || 0,
+        goal: project.goal.amount || 0,
+        pledged: [project.pledged.amount] || 0
+      }
     };
   });
 };

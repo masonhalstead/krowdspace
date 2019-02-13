@@ -27,7 +27,9 @@ import {
   faDesktop,
   faSignInAlt,
   faEllipsisH,
-  faLongArrowAltLeft
+  faLongArrowAltLeft,
+  faHeart,
+  faCircle
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   far,
@@ -44,7 +46,9 @@ library.add(
   faDesktop,
   faSignInAlt,
   faEllipsisH,
-  faLongArrowAltLeft
+  faLongArrowAltLeft,
+  faHeart,
+  faCircle
 );
 const mapStateToProps = state => {
   return {
@@ -106,8 +110,8 @@ class ConnectedApp extends Component {
   }
   render() {
     const { navigation, side_nav } = this.state;
-    const { active } = this.props.user;
     const { navbar_height, side_panel_width, active_menu } = this.props.display;
+    const active = !!localStorage.getItem('token');
     const PrivateRoutes = () => {
       return active ? (
         <Route exact path="/profile" component={async.ProfileWrapper} />

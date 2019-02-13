@@ -31,28 +31,56 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
-  admin: {
+  password_reset: {
     type: Boolean,
-    required: false
+    required: true
   },
-  project_owner: {
-    type: Boolean,
-    required: false
+  indiegogo_user: {
+    type: String,
+    default: null
   },
+  views: {
+    type: Number,
+    default: 0
+  },
+  project_count: {
+    type: Number,
+    default: 0
+  },
+  kickstarter_user: {
+    type: String,
+    default: null
+  },
+  creator_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Creators'
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Projects'
+    }
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comments'
+    }
+  ],
   projects: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Projects'
     }
   ],
-  password_reset: {
-    type: Boolean,
-    required: false
-  }
+  admin: Boolean
 });
 
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id, admin: this.admin }, PRIVATE_KEY);
+  const token = jwt.sign(
+    { _id: this._id, creator_id: this.creator_id, admin: this.admin },
+    PRIVATE_KEY
+  );
   return token;
 };
 const User = mongoose.model('Users', userSchema);
@@ -79,6 +107,9 @@ function validateUser(user) {
       .required()
       .email(),
     password: new PasswordComplexity(complexityOptions),
+    password_reset: Joi.boolean().required(),
+    indiegogo_user: Joi.string().optional(),
+    kickstarter_user: Joi.string().optional(),
     sub: Joi.string().optional()
   };
   return Joi.validate(user, schema);

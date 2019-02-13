@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { toggleModal, setAuthToken, setLoading } from 'actions';
+import { toggleModal, setAuthToken, setLoading, userLogin } from 'actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import isUrl from 'is-url';
 
@@ -23,6 +23,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
+    userLogin: user => dispatch(userLogin(user)),
     toggleModal: modal => dispatch(toggleModal(modal)),
     setAuthToken: token => dispatch(setAuthToken(token)),
     setLoading: setting => dispatch(setLoading(setting))
@@ -30,7 +31,7 @@ const mapDispatchToProps = dispatch => {
 };
 const initial_state = {
   domain: '',
-  categories: [],
+  category: '',
   url: '',
   url_valid: 0,
   agree: false,
@@ -40,7 +41,7 @@ const initial_state = {
 class ConnectedSubmitProject extends Component {
   state = {
     domain: '',
-    categories: [],
+    category: '',
     url: '',
     url_valid: 0,
     agree: false,
@@ -49,23 +50,14 @@ class ConnectedSubmitProject extends Component {
   };
   handleOnBack = () => {
     this.setState({
-      categories: [],
+      category: '',
       url: '',
       toggle: this.state.toggle-1,
       valid: false,
       agree: false
     });
   }
-  handleCheckCategory = id => {
-    const { categories } = this.state;
-    if(categories.includes(id)){
-      const index = categories.indexOf(id);
-      categories.splice(index, 1);
-    }else{
-      categories.push(id)
-    }
-    this.setState({categories: categories})
-  }
+  handleCheckCategory = category => this.setState({category: category});
   handleOnSelect = domain => this.setState({ 
     domain: domain, 
     toggle: this.state.toggle+1
@@ -104,12 +96,12 @@ class ConnectedSubmitProject extends Component {
   };
   chooseToggleScreen = (toggle) => this.setState({...toggle})
   toggleSwitch = (screen) => {
-    const { categories, domain, url_valid, url, agree, valid } = this.state;
+    const { category, domain, url_valid, url, agree, valid } = this.state;
     switch(screen) {
       case 0:
         return <ChooseSource handleOnSelect={this.handleOnSelect}/>;
       case 1:
-        return <ChooseCategories domain={domain} categories={categories} handleCheckCategory={this.handleCheckCategory} chooseToggleScreen={this.chooseToggleScreen}/>;
+        return <ChooseCategories domain={domain} category={category} handleCheckCategory={this.handleCheckCategory} chooseToggleScreen={this.chooseToggleScreen}/>;
       case 2:
         return <ChooseProject url_valid={url_valid} url={url} domain={domain} agree={agree} valid={valid} handleOnInput={this.handleOnInput} handleValidation={this.handleValidation} handleSubmit={this.handleSubmit}/>;
       default:
@@ -118,8 +110,8 @@ class ConnectedSubmitProject extends Component {
   }
   handleSubmit = e => {
     e.preventDefault();
-    const { domain, url,categories } = this.state;
-    const { setLoading, toggleModal, user } = this.props;
+    const { domain, url,category } = this.state;
+    const { setLoading, toggleModal, user, setAuthToken, userLogin } = this.props;
 
     // Show loading icon
     setLoading(true);
@@ -127,21 +119,29 @@ class ConnectedSubmitProject extends Component {
     const data = {
       url,
       domain,
-      categories
+      category
     };
-
+    
     //Pass data to the public API route
     api.postData('/api/projects/create', data, user.token).then((res) => {
+      // Get the token and set
+      setAuthToken(res.data);
 
+      // Return axios promise and get user data
+      return api.getData('/api/users/me', res.data);
+
+    }).then((res) => {
+      
+      userLogin(res.data);
       // Set initial state and handle response
-      this.setState({...initial_state, categories: []}, () => {
+      this.setState({...initial_state}, () => {
         toggleModal({ submit_project: false });
         setLoading(false);
       });
     })
     .catch((err) => {
       // Set initial state and handle response
-      this.setState({...initial_state, categories: []}, () => {
+      this.setState({...initial_state}, () => {
         toggleModal({ submit_project: false });
         core.handleError(err)
       })

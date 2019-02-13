@@ -135,7 +135,12 @@ class ConnectedCreateAccount extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, email, password } = this.state;
-    const data = { name, email, password };
+    const data = { 
+      name, 
+      email, 
+      password,
+      password_reset: false
+    };
 
     // Always allow post if button is enabled
     this.handlePost('/api/users/create', data);

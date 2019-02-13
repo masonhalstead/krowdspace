@@ -6,7 +6,7 @@ export const ChooseSource = ({ handleOnSelect }) => {
     const buttons = [{ text: 'kickstarter' }, { text: 'indiegogo' }];
     return (
       <React.Fragment>
-        <h2 className="user-create-title">Select Crowdfunding Site</h2>
+        <h2 className="user-create-title">Select crowdfunding site</h2>
         { buttons.map((item, index) => {
               return (
                 <Button

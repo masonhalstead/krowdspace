@@ -32,7 +32,7 @@ module.exports = async function(req, res, next) {
           req.body = res;
           next();
         })
-        .catch(() => {
+        .catch(err => {
           res.status(400).send('Error populating Kickstarter project');
         });
       break;
