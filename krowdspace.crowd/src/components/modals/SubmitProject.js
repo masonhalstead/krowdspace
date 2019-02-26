@@ -52,16 +52,17 @@ class ConnectedSubmitProject extends Component {
     this.setState({
       category: '',
       url: '',
-      toggle: this.state.toggle-1,
+      toggle: this.state.toggle - 1,
       valid: false,
       agree: false
     });
-  }
-  handleCheckCategory = category => this.setState({category: category});
-  handleOnSelect = domain => this.setState({ 
-    domain: domain, 
-    toggle: this.state.toggle+1
-  });
+  };
+  handleCheckCategory = category => this.setState({ category: category });
+  handleOnSelect = domain =>
+    this.setState({
+      domain: domain,
+      toggle: this.state.toggle + 1
+    });
   handleCloseModal = () => this.props.toggleModal({ submit_project: false });
   handleValidation = () =>
     this.setState(
@@ -86,32 +87,56 @@ class ConnectedSubmitProject extends Component {
     const regex = new RegExp(`${domain}.com/`);
 
     if (regex.test(url)) url_valid++;
-    if(isUrl(url)) url_valid++;
-    
+    if (isUrl(url)) url_valid++;
+
     this.setState({ url_valid: url_valid });
 
     if (agree && url && url_valid === 2) {
       this.setState({ valid: true });
     }
   };
-  chooseToggleScreen = (toggle) => this.setState({...toggle})
-  toggleSwitch = (screen) => {
+  chooseToggleScreen = toggle => this.setState({ ...toggle });
+  toggleSwitch = screen => {
     const { category, domain, url_valid, url, agree, valid } = this.state;
-    switch(screen) {
+    switch (screen) {
       case 0:
-        return <ChooseSource handleOnSelect={this.handleOnSelect}/>;
+        return <ChooseSource handleOnSelect={this.handleOnSelect} />;
       case 1:
-        return <ChooseCategories domain={domain} category={category} handleCheckCategory={this.handleCheckCategory} chooseToggleScreen={this.chooseToggleScreen}/>;
+        return (
+          <ChooseCategories
+            domain={domain}
+            category={category}
+            handleCheckCategory={this.handleCheckCategory}
+            chooseToggleScreen={this.chooseToggleScreen}
+          />
+        );
       case 2:
-        return <ChooseProject url_valid={url_valid} url={url} domain={domain} agree={agree} valid={valid} handleOnInput={this.handleOnInput} handleValidation={this.handleValidation} handleSubmit={this.handleSubmit}/>;
+        return (
+          <ChooseProject
+            url_valid={url_valid}
+            url={url}
+            domain={domain}
+            agree={agree}
+            valid={valid}
+            handleOnInput={this.handleOnInput}
+            handleValidation={this.handleValidation}
+            handleSubmit={this.handleSubmit}
+          />
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
   handleSubmit = e => {
     e.preventDefault();
-    const { domain, url,category } = this.state;
-    const { setLoading, toggleModal, user, setAuthToken, userLogin } = this.props;
+    const { domain, url, category } = this.state;
+    const {
+      setLoading,
+      toggleModal,
+      user,
+      setAuthToken,
+      userLogin
+    } = this.props;
 
     // Show loading icon
     setLoading(true);
@@ -121,31 +146,32 @@ class ConnectedSubmitProject extends Component {
       domain,
       category
     };
-    
+
     //Pass data to the public API route
-    api.postData('/api/projects/create', data, user.token).then((res) => {
-      // Get the token and set
-      setAuthToken(res.data);
+    api
+      .postData('/api/projects/create', data, user.token)
+      .then(res => {
+        // Get the token and set
+        setAuthToken(res.data);
 
-      // Return axios promise and get user data
-      return api.getData('/api/users/me', res.data);
-
-    }).then((res) => {
-      
-      userLogin(res.data);
-      // Set initial state and handle response
-      this.setState({...initial_state}, () => {
-        toggleModal({ submit_project: false });
-        setLoading(false);
-      });
-    })
-    .catch((err) => {
-      // Set initial state and handle response
-      this.setState({...initial_state}, () => {
-        toggleModal({ submit_project: false });
-        core.handleError(err)
+        // Return axios promise and get user data
+        return api.getData('/api/users/me', res.data);
       })
-    })
+      .then(res => {
+        userLogin(res.data);
+        // Set initial state and handle response
+        this.setState({ ...initial_state }, () => {
+          toggleModal({ submit_project: false });
+          setLoading(false);
+        });
+      })
+      .catch(err => {
+        // Set initial state and handle response
+        this.setState({ ...initial_state }, () => {
+          toggleModal({ submit_project: false });
+          core.handleError(err);
+        });
+      });
   };
   render() {
     const { toggle } = this.state;
@@ -156,12 +182,14 @@ class ConnectedSubmitProject extends Component {
         show={modals.submit_project}
         onHide={this.handleCloseModal}
       >
-        { toggle !== 0 && <FontAwesomeIcon
-          onClick={() => this.handleOnBack()}
-          className="modal-back-icon"
-          icon={['fas', 'long-arrow-alt-left']}
-          size="lg"
-        /> }
+        {toggle !== 0 && (
+          <FontAwesomeIcon
+            onClick={() => this.handleOnBack()}
+            className="modal-back-icon"
+            icon={['fas', 'long-arrow-alt-left']}
+            size="lg"
+          />
+        )}
         <FontAwesomeIcon
           onClick={this.handleCloseModal}
           className="modal-close-icon"
@@ -176,9 +204,7 @@ class ConnectedSubmitProject extends Component {
             height={34}
           />
         </div>
-        <div className="user-create-body">
-          {this.toggleSwitch(toggle)}
-        </div>
+        <div className="user-create-body">{this.toggleSwitch(toggle)}</div>
       </Modal>
     );
   }

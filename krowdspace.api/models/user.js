@@ -94,7 +94,17 @@ const complexityOptions = {
   symbol: 1,
   requirementCount: 3
 };
-
+function validateUserUpdate(user) {
+  const schema = {
+    name: Joi.string()
+      .min(5)
+      .max(50)
+      .required(),
+    indiegogo_user: Joi.string().optional(),
+    kickstarter_user: Joi.string().optional()
+  };
+  return Joi.validate(user, schema);
+}
 function validateUser(user) {
   const schema = {
     name: Joi.string()
@@ -108,8 +118,12 @@ function validateUser(user) {
       .email(),
     password: new PasswordComplexity(complexityOptions),
     password_reset: Joi.boolean().required(),
-    indiegogo_user: Joi.string().optional(),
-    kickstarter_user: Joi.string().optional(),
+    indiegogo_user: Joi.string()
+      .valid('')
+      .optional(),
+    kickstarter_user: Joi.string()
+      .valid('')
+      .optional(),
     sub: Joi.string().optional()
   };
   return Joi.validate(user, schema);
@@ -124,4 +138,5 @@ function validatePassword(password) {
 
 exports.User = User;
 exports.validatePassword = validatePassword;
+exports.validateUserUpdate = validateUserUpdate;
 exports.validate = validateUser;

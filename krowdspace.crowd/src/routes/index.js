@@ -11,3 +11,8 @@ export const ProfileWrapper = Loadable({
   loading: Loading,
   delay: 200
 });
+export const ProfileProjectWrapper = Loadable({
+  loader: () => import('./../components/profile/project/ProfileProjectWrapper'),
+  loading: Loading,
+  delay: 200
+});

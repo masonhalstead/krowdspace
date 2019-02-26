@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/google', google, async (req, res) => {
+  console.log(req.body);
   const { error } = validate(req.body);
   res.set({ Accept: 'application/json, text/plain, */*' });
 
@@ -59,6 +60,7 @@ function validate(req) {
       .min(8)
       .max(255)
       .required(),
+    password_reset: Joi.boolean().optional(),
     name: Joi.string().optional(),
     sub: Joi.string().optional()
   };

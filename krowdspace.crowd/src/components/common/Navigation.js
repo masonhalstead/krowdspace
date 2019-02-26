@@ -107,16 +107,28 @@ class ConnectedNavigation extends Component {
           </div>
           <div className="navigation-block" style={style.navigation_block}>
             {navigation.map((item, index) => {
-              switch(item.type) {
+              switch (item.type) {
                 case 'link':
-                  return <Link to={item.link} key={index}>
-                  <p className="navigation-item">{item.name}</p>
-                </Link>
+                  return (
+                    <Link to={item.link} key={index}>
+                      <p className="navigation-item">{item.name}</p>
+                    </Link>
+                  );
                 case 'modal':
-                  return <p key={index} onClick={() => this.props.toggleModal({ [item.link]: true })} className="navigation-item">{item.name}</p>
-                
+                  return (
+                    <p
+                      key={index}
+                      onClick={() =>
+                        this.props.toggleModal({ [item.link]: true })
+                      }
+                      className="navigation-item"
+                    >
+                      {item.name}
+                    </p>
+                  );
+
                 default:
-                  return null
+                  return null;
               }
             })}
           </div>

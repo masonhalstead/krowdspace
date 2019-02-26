@@ -21,6 +21,9 @@ kickstarter = async req => {
     const project_cleaned = project_cheerio.html();
     const { project } = project_object;
     const { video } = project;
+    const finish_date = new Date().getTime() + project.deadlineAt;
+    const start_date = finish_date - 1000 * 60 * 60 * 24 * project.duration;
+
     return {
       user_id: _id,
       creator_id: creator_id,
@@ -35,6 +38,13 @@ kickstarter = async req => {
         short_link: project.projectShortLink || undefined,
         url: project.url || undefined,
         duration: project.duration || 0,
+        backers: project.backersCount || 0,
+        funded: project.percentFunded || 0,
+        goal: project.goal.amount || 0,
+        pledged: project.pledged.amount || 0,
+        currency_symbol: project.goal.symbol || undefined,
+        start_date: start_date,
+        finish_date: finish_date,
         deadline: project.deadlineAt || 0,
         state: project.state || undefined,
         description: project.description || undefined,

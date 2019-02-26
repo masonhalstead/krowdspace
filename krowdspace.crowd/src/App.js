@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Body, SidePanel } from 'krowdspace.components';
+import { SidePanel } from 'krowdspace.components';
 import Navigation from './components/common/Navigation';
 import CreateAccount from './components/modals/CreateAccount';
+import Body from 'components/common/Body';
 import UserLogin from './components/modals/UserLogin';
 import ErrorMessage from './components/modals/ErrorMessage';
 import SubmitProject from './components/modals/SubmitProject';
@@ -13,8 +14,8 @@ import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay, checkUserAuth } from './actions/index';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
+import { fas, faLaptop } from '@fortawesome/free-solid-svg-icons';
+import { far, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { fab, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import {
   faGamepad,
@@ -29,7 +30,9 @@ import {
   faEllipsisH,
   faLongArrowAltLeft,
   faHeart,
-  faCircle
+  faChartPie,
+  faTasks,
+  faSyncAlt
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   far,
@@ -48,7 +51,11 @@ library.add(
   faEllipsisH,
   faLongArrowAltLeft,
   faHeart,
-  faCircle
+  faLaptop,
+  faChartPie,
+  faThumbsUp,
+  faTasks,
+  faSyncAlt
 );
 const mapStateToProps = state => {
   return {
@@ -114,9 +121,15 @@ class ConnectedApp extends Component {
     const active = !!localStorage.getItem('token');
     const PrivateRoutes = () => {
       return active ? (
+        <React.Fragment>
         <Route exact path="/profile" component={async.ProfileWrapper} />
+        <Route exact path="/profile/projects/:project_id" component={async.ProfileProjectWrapper} />
+        </React.Fragment>
       ) : (
+        <React.Fragment>
         <Redirect from="/profile" push to="/" />
+        <Redirect from="/profile/projects/:project_id" push to="/" />
+        </React.Fragment>
       );
     };
     return (

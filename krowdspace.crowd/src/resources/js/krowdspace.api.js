@@ -51,23 +51,32 @@ export const api = {
         this.getData('/api/projects/featured', token)
       ])
       .then(
-        axios.spread(
-          (
-            user,
-            featured_projects
-          ) => {
-            const { kickstarter_user, indiegogo_user } = user.data;
-            user = {
-              ...user.data,
-              kickstarter_user: kickstarter_user === null ? '' : kickstarter_user,
-              indiegogo_user: indiegogo_user === null ? '' : indiegogo_user
-            }
-            return {
-              user: user,
-              featured_projects: featured_projects.data
-            }
-          }
-        )
+        axios.spread((user, featured_projects) => {
+          const { kickstarter_user, indiegogo_user } = user.data;
+          user = {
+            ...user.data,
+            kickstarter_user: kickstarter_user === null ? '' : kickstarter_user,
+            indiegogo_user: indiegogo_user === null ? '' : indiegogo_user
+          };
+          return {
+            user: user,
+            projects: user.projects,
+            featured_projects: featured_projects.data
+          };
+        })
       );
-    },
+  },
+  getProfileProjectData: function(token, project_id) {
+    return axios
+      .all([
+        this.getData(`/api/users/projects/${project_id}`, token)
+      ])
+      .then(
+        axios.spread((project) => {
+          return {
+            project: project.data
+          };
+        })
+      );
+  },
 };

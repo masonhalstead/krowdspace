@@ -9,6 +9,10 @@ p {
 a:hover {
   text-decoration: none !important;
 }
+.body-container {
+  flex-grow: 1;
+  background: #fff;
+}
 .google-icon {
   cursor: pointer;
   color: #d6d6d6;
@@ -62,5 +66,5 @@ label {
   color: $success;
 }
 .capitalize {
-  text-transform: capitalize
+  text-transform: capitalize;
 }
