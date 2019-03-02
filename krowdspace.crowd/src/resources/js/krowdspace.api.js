@@ -68,15 +68,7 @@ export const api = {
   },
   getProfileProjectData: function(token, project_id) {
     return axios
-      .all([
-        this.getData(`/api/users/projects/${project_id}`, token)
-      ])
-      .then(
-        axios.spread((project) => {
-          return {
-            project: project.data
-          };
-        })
-      );
+      .all([this.getData(`/api/users/projects/${project_id}`, token)])
+      .then(axios.spread((res) => res.data));
   },
 };

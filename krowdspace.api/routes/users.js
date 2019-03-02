@@ -2,50 +2,48 @@ const _ = require('lodash');
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const google = require('../middleware/auth-google');
+const express = require('express');
+const router = express.Router();
 const { Project } = require('../models/project');
+const { userActions } = require('../actions/users');
+const { metricActions } = require('../actions/metrics');
+
 const {
   User,
-  validate,
+  validateUser,
   validatePassword,
   validateUserUpdate
 } = require('../models/user');
-const express = require('express');
-const router = express.Router();
 
 router.get('/me', auth, async (req, res) => {
-  const project_count = await Project.find().count();
-  const user = await User.findByIdAndUpdate(
+  const project_count = await Project.find().countDocuments();
+  let user = await User.findByIdAndUpdate(
     req.user._id,
-    {
-      project_count: project_count
-    },
-    {
-      new: true
-    }
-  )
-    .populate('projects')
-    .select('-password -sub');
+    { project_count: project_count },
+    { new: true }
+  ).populate({
+    path: 'projects',
+    populate: { path: 'metrics' }
+  });
 
   res.send(user);
 });
+
 router.get('/projects/:project_id', auth, async (req, res) => {
-  const project = await Project.findOneAndUpdate(
-    { uri: req.params.project_id },
-    { $inc: { views: 1 } },
-    {
-      new: true
-    }
-  ).populate('funding_id');
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    $inc: { views: 1 }
-  });
+  const project_id = req.params.project_id;
+  const user_id = req.user._id;
+
+  const project = await Project.findOne({ uri: project_id });
+  const metrics = await metricActions('ADD_VIEWS', project.metrics);
+  const user = await userActions('ADD_VIEWS', user_id);
 
   if (!project) return res.status(404).send('The project was not found.');
-  if (user._id.toString() !== project.user_id.toString())
+  if (String(user._id) !== String(project.user))
     return res.status(404).send('Unauthorized to access this project');
 
-  res.send(project);
+  res.send({ project, metrics });
 });
+
 router.put('/password-reset', auth, async (req, res) => {
   const { error } = validatePassword(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -63,7 +61,7 @@ router.put('/password-reset', auth, async (req, res) => {
   res.status(200).send('Password set successful.');
 });
 router.post('/google', google, async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   let user = await User.findOne({ email: req.body.email });
@@ -75,10 +73,11 @@ router.post('/google', google, async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
   user = await user.save();
   const token = user.generateAuthToken();
+
   res.send(token);
 });
 router.post('/create', async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   let user = await User.findOne({ email: req.body.email });
@@ -93,6 +92,7 @@ router.post('/create', async (req, res) => {
   const token = user.generateAuthToken();
   res.send(token);
 });
+
 router.post('/update', auth, async (req, res) => {
   const { error } = validateUserUpdate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -110,4 +110,5 @@ router.post('/update', auth, async (req, res) => {
   ).select('-password -sub');
   res.send(user);
 });
+
 module.exports = router;

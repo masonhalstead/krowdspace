@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const moment = require('moment');
 const $ = require('cheerio');
 
 kickstarter = async req => {
@@ -20,16 +21,26 @@ kickstarter = async req => {
 
     const project_cleaned = project_cheerio.html();
     const { project } = project_object;
-    const { video } = project;
-    const finish_date = new Date().getTime() + project.deadlineAt;
+
+    const finish_date = project.deadlineAt * 1000;
     const start_date = finish_date - 1000 * 60 * 60 * 24 * project.duration;
+
+    const day_diff = 2;
+    const day_count =
+      day_diff + moment(finish_date).diff(moment(new Date()), 'days');
+    let days = [];
+    for (let day = 0; day < day_count; day++) {
+      days.push(
+        moment()
+          .add(day, 'days')
+          .toDate()
+      );
+    }
 
     return {
       user_id: _id,
       creator_id: creator_id,
       project: {
-        likes: 0,
-        views: 0,
         uri: project.pid || parseInt(Math.random() * 10000000, 10),
         featured: false,
         domain_id: project.id || undefined,
@@ -37,23 +48,14 @@ kickstarter = async req => {
         category: category || undefined,
         short_link: project.projectShortLink || undefined,
         url: project.url || undefined,
-        duration: project.duration || 0,
-        backers: project.backersCount || 0,
-        funded: project.percentFunded || 0,
-        goal: project.goal.amount || 0,
-        pledged: project.pledged.amount || 0,
-        currency_symbol: project.goal.symbol || undefined,
         start_date: start_date,
         finish_date: finish_date,
-        deadline: project.deadlineAt || 0,
+        duration: project.duration || 0,
         state: project.state || undefined,
         description: project.description || undefined,
         name: project.name || undefined,
         image_url: project.imageUrl || undefined,
-        content: project_cleaned || undefined,
-        video: video ? [video.videoSources] : [],
-        video_image_url: video ? video.previewImageUrl : undefined,
-        location: project.location.displayableName || undefined
+        content: project_cleaned || undefined
       },
       creator: {
         domain: domain || undefined,
@@ -64,15 +66,28 @@ kickstarter = async req => {
         project_count: project.creator.createdProjects.totalCount || 0,
         location: project.location.displayableName || undefined
       },
-      funding: {
+      metric: {
         project: project.id || undefined,
+        url: project.url || undefined,
         currency: project.currency || undefined,
-        currency_symbol: project.goal.symbol || undefined,
-        date: [new Date()],
-        backers: [project.backersCount] || 0,
-        funded: [project.percentFunded] || 0,
-        goal: project.goal.amount || 0,
-        pledged: [project.pledged.amount] || 0
+        currency_symbol: project.goal.symbol || '$',
+        dates: days,
+        views: [0],
+        views_daily: 0,
+        views_total: 0,
+        likes: [0],
+        likes_daily: 0,
+        likes_total: 0,
+        backers: [project.backersCount] || [0],
+        backers_daily: project.backersCount || 0,
+        backers_total: project.backersCount || 0,
+        funded: [project.percentFunded] || [0],
+        funded_daily: project.percentFunded || 0,
+        funded_total: project.percentFunded || 0,
+        pledged: [project.pledged.amount] || [0],
+        pledged_daily: project.pledged.amount || 0,
+        pledged_total: project.pledged.amount || 0,
+        goal: project.goal.amount || 0
       }
     };
   });

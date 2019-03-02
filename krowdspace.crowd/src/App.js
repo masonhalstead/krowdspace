@@ -7,9 +7,11 @@ import Body from 'components/common/Body';
 import UserLogin from './components/modals/UserLogin';
 import ErrorMessage from './components/modals/ErrorMessage';
 import SubmitProject from './components/modals/SubmitProject';
+import PasswordReset from './components/modals/PasswordReset';
 import LoadingOverlay from './components/common/LoadingOverlay';
 import { SideNav } from './components/common/SideNav';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { defaults, Chart } from 'react-chartjs-2';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay, checkUserAuth } from './actions/index';
@@ -57,6 +59,15 @@ library.add(
   faTasks,
   faSyncAlt
 );
+
+// Charts.js Global Defaults
+Chart.Legend.prototype.afterFit = function() {
+  this.height = this.height + 10;
+};
+defaults.global.defaultFontFamily = 'Lato';
+defaults.global.defaultFontStyle = 300;
+defaults.global.defaultFontColor = '#444';
+
 const mapStateToProps = state => {
   return {
     display: state.display,
@@ -157,6 +168,7 @@ class ConnectedApp extends Component {
           <LoadingOverlay />
           {/* Modals */}
           <UserLogin />
+          <PasswordReset />
           <ErrorMessage />
           <CreateAccount />
           <SubmitProject />

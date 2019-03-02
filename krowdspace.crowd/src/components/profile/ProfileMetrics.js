@@ -5,7 +5,7 @@ export const ProfileMetrics = ({
   likes,
   project_count,
   projects,
-  views,
+  viewed,
   comments
 }) => {
   const metrics = [{
@@ -17,7 +17,7 @@ export const ProfileMetrics = ({
     text: 'Viewed',
     class: 'profile-metric-icon',
     icon: ['fas', 'laptop'],
-    data: views
+    data: viewed
   },{
     text: 'Total Projects',
     class: 'profile-metric-icon-right',

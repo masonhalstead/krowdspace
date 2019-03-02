@@ -6,6 +6,28 @@ const jwt = require('jsonwebtoken');
 const { PRIVATE_KEY } = process.env;
 
 const userSchema = new mongoose.Schema({
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Creators'
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Projects'
+    }
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comments'
+    }
+  ],
+  projects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Projects'
+    }
+  ],
   name: {
     type: String,
     required: true,
@@ -39,7 +61,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  views: {
+  viewed: {
     type: Number,
     default: 0
   },
@@ -51,28 +73,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  creator_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Creators'
-  },
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Projects'
-    }
-  ],
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comments'
-    }
-  ],
-  projects: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Projects'
-    }
-  ],
   admin: Boolean
 });
 
@@ -94,6 +94,28 @@ const complexityOptions = {
   symbol: 1,
   requirementCount: 3
 };
+
+function validateUser(req) {
+  const schema = {
+    name: Joi.string().optional(),
+    email: Joi.string()
+      .min(5)
+      .max(255)
+      .required()
+      .email(),
+    password: new PasswordComplexity(complexityOptions),
+    password_reset: Joi.boolean().optional(),
+    indiegogo_user: Joi.string()
+      .valid('')
+      .optional(),
+    kickstarter_user: Joi.string()
+      .valid('')
+      .optional(),
+    sub: Joi.string().optional()
+  };
+  return Joi.validate(req, schema);
+}
+
 function validateUserUpdate(user) {
   const schema = {
     name: Joi.string()
@@ -105,29 +127,6 @@ function validateUserUpdate(user) {
   };
   return Joi.validate(user, schema);
 }
-function validateUser(user) {
-  const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50)
-      .required(),
-    email: Joi.string()
-      .min(5)
-      .max(255)
-      .required()
-      .email(),
-    password: new PasswordComplexity(complexityOptions),
-    password_reset: Joi.boolean().required(),
-    indiegogo_user: Joi.string()
-      .valid('')
-      .optional(),
-    kickstarter_user: Joi.string()
-      .valid('')
-      .optional(),
-    sub: Joi.string().optional()
-  };
-  return Joi.validate(user, schema);
-}
 function validatePassword(password) {
   const schema = {
     password: new PasswordComplexity(complexityOptions)
@@ -135,8 +134,7 @@ function validatePassword(password) {
 
   return Joi.validate(password, schema);
 }
-
 exports.User = User;
 exports.validatePassword = validatePassword;
 exports.validateUserUpdate = validateUserUpdate;
-exports.validate = validateUser;
+exports.validateUser = validateUser;

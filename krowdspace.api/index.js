@@ -11,6 +11,7 @@ require('./startup/routes')(app);
 require('./startup/db')(MONGO_DB);
 require('./startup/config')(PRIVATE_KEY);
 require('./startup/validation');
+require('./jobs/metrics');
 
 if (NODE_ENV === 'production') {
   require('./startup/prod')(app);

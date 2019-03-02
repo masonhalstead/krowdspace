@@ -2,17 +2,13 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
-  user_id: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users'
   },
-  creator_id: {
+  creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Creators'
-  },
-  funding_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Fundings'
   },
   comments: [
     {
@@ -20,8 +16,10 @@ const projectSchema = new mongoose.Schema({
       ref: 'Comments'
     }
   ],
-  likes: Number,
-  views: Number,
+  metrics: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Metrics'
+  },
   uri: Number,
   featured: Boolean,
   domain_id: String,
@@ -31,54 +29,33 @@ const projectSchema = new mongoose.Schema({
   url: String,
   start_date: Number,
   finish_date: Number,
-  currency_symbol: String,
-  backers: Number,
-  funded: Number,
-  goal: Number,
-  pledged: Number,
-  duration: Number,
   deadline: Number,
   state: String,
   description: String,
   name: String,
   image_url: String,
-  content: String,
-  video: Array,
-  video_image_url: String,
-  location: String
+  content: String
 });
 
 const Project = mongoose.model('Projects', projectSchema);
 
 function validateProject(data) {
   const project = Joi.object({
+    uri: Joi.number().required(),
+    featured: Joi.boolean().required(),
     domain_id: Joi.string().required(),
     domain: Joi.string().required(),
     category: Joi.string().required(),
-    uri: Joi.number().required(),
-    likes: Joi.number().required(),
-    views: Joi.number().required(),
-    featured: Joi.boolean().required(),
-    short_link: Joi.string().optional(),
-    url: Joi.string().optional(),
-    start_date: Joi.number().optional(),
-    finish_date: Joi.number().optional(),
-    currency_symbol: Joi.string().optional(),
-    backers: Joi.number().optional(),
-    funded: Joi.number().optional(),
-    goal: Joi.number().optional(),
-    pledged: Joi.number().optional(),
-    duration: Joi.number().optional(),
-    deadline: Joi.number().optional(),
-    state: Joi.string().optional(),
-    description: Joi.string().optional(),
-    name: Joi.string().optional(),
-    image_url: Joi.string().optional(),
-    content: Joi.string().optional(),
-    url: Joi.string().optional(),
-    video: Joi.array().optional(),
-    video_image_url: Joi.string().optional(),
-    location: Joi.string().optional()
+    short_link: Joi.string().required(),
+    url: Joi.string().required(),
+    start_date: Joi.number().required(),
+    finish_date: Joi.number().required(),
+    duration: Joi.number().required(),
+    state: Joi.string().required(),
+    description: Joi.string().required(),
+    name: Joi.string().required(),
+    image_url: Joi.string().required(),
+    content: Joi.string().required()
   });
   const creator = Joi.object({
     domain: Joi.string().required(),
@@ -89,26 +66,39 @@ function validateProject(data) {
     project_count: Joi.number().required(),
     location: Joi.string().required()
   });
-  const funding = Joi.object({
-    project: Joi.string().required(),
+  const metric = Joi.object({
+    project: Joi.string().optional(),
+    url: Joi.string().optional(),
     currency: Joi.string().optional(),
     currency_symbol: Joi.string().optional(),
-    date: Joi.array().optional(),
+    dates: Joi.array().optional(),
+    views: Joi.array().optional(),
+    views_daily: Joi.number().optional(),
+    views_total: Joi.number().optional(),
+    likes: Joi.array().optional(),
+    likes_daily: Joi.number().optional(),
+    likes_total: Joi.number().optional(),
     backers: Joi.array().optional(),
+    backers_daily: Joi.number().optional(),
+    backers_total: Joi.number().optional(),
     funded: Joi.array().optional(),
-    goal: Joi.number().optional(),
-    pledged: Joi.array().optional()
+    funded_daily: Joi.number().optional(),
+    funded_total: Joi.number().optional(),
+    pledged: Joi.array().optional(),
+    pledged_daily: Joi.number().optional(),
+    pledged_total: Joi.number().optional(),
+    goal: Joi.number().optional()
   });
   const schema = Joi.object({
     creator_id: Joi.string().optional(),
     user_id: Joi.string().required(),
     project: project,
     creator: creator,
-    funding: funding
+    metric: metric
   });
   return Joi.validate(data, schema);
 }
 
-exports.projectSchema = projectSchema;
 exports.Project = Project;
+exports.projectSchema = projectSchema;
 exports.validate = validateProject;

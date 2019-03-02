@@ -1,0 +1,32 @@
+.project-image {
+    width: 100%;
+    border: 1px solid #bfbfbf;
+    border-radius: 5px;
+  }
+  .profile-project-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  .profile-chart-wrapper {
+    min-height: 300px;
+    height: 300px;
+    max-height: 300px;
+    height: 100%;
+  }
+  .project-bottom-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0px 15px;
+  }
+  .project-metrics-container {
+    width: 100%;
+    margin-top: 25px;
+    padding: 0px 15px 25px 15px;
+  }
+  .project-metrics-container:first-child {
+    margin-top: 0px;
+  }
+  .project-right-container {
+    width: 50%;
+    padding: 0px 15px 25px 15px;
+  }

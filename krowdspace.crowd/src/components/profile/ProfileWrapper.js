@@ -33,7 +33,7 @@ class ConnectedProfileWrapper extends Component {
     likes: [],
     comments: [],
     projects: [],
-    views: 0,
+    viewed: 0,
     project_count: 0,
     owned: [],
     valid: false,
@@ -93,7 +93,7 @@ class ConnectedProfileWrapper extends Component {
       likes,
       comments,
       projects,
-      views,
+      viewed,
       project_count
     } = this.state;
     return (
@@ -116,7 +116,7 @@ class ConnectedProfileWrapper extends Component {
               project_count={project_count}
               likes={likes.length}
               comments={comments.length}
-              views={views}
+              viewed={viewed}
               projects={projects.length}
             />
           </div>

@@ -95,7 +95,7 @@ class ConnectedPasswordReset extends Component {
     return (
       <Modal
         className="user-password-modal"
-        show={JSON.parse(user.password_reset)}
+        show={user.password_reset}
         onHide={this.handleCloseModal}
       >
         <FontAwesomeIcon

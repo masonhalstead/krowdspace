@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { toggleModal, userLogin, setAuthToken, setLoading, updateUser } from 'actions';
+import { ProfileFundingChart } from './ProfileFundingChart';
+import { ProfileAnalyticsChart } from './ProfileAnalyticsChart';
 import { api } from 'resources/js/krowdspace.api';
 import { core } from 'resources/js/krowdspace.core';
 
@@ -21,7 +23,18 @@ const mapDispatchToProps = dispatch => {
 };
 class ConnectedProfileProjectWrapper extends Component {
   state = {
-    name: ''
+    data_loaded: false,
+    project: {
+      name: '',
+      image_url: ''
+    },
+    metrics: {
+      funded: [],
+      dates: [],
+      pledged: [],
+      goal: 100,
+      pledged_total: 0
+    }
   };
   componentDidMount() {
     const { user } = this.props;
@@ -30,15 +43,32 @@ class ConnectedProfileProjectWrapper extends Component {
     api
       .getProfileProjectData(user.token, project_id)
       .then(res => {
-        console.log(res)
+        this.setState({
+          project: res.project,
+          metrics: res.metrics,
+          data_loaded: true
+        })
       })
       .catch(err => core.handleError(err));
   }
   render() {
+    const { project, metrics, data_loaded } = this.state;
     return (
       <React.Fragment>
         <div className="profile-wrapper">
-sdfsdfsdfsd
+        <div className="profile-left-container">
+          <img src={project.image_url} className="project-image" alt={project.name} />
+          </div>
+          <div className="profile-right-container">
+          </div>
+        </div>
+        <div className="project-bottom-wrapper">
+          <div className="project-metrics-container">
+    { data_loaded && <ProfileFundingChart metrics={metrics} project={project} /> }
+          </div>
+          <div className="project-metrics-container">
+    { data_loaded &&  <ProfileAnalyticsChart metrics={metrics} project={project} /> }
+          </div>
         </div>
       </React.Fragment>
     );

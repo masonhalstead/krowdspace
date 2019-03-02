@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const creatorSchema = new mongoose.Schema({
-  user_id: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users'
   },
@@ -11,7 +11,6 @@ const creatorSchema = new mongoose.Schema({
       ref: 'Projects'
     }
   ],
-  creator_id: String,
   domain: String,
   name: String,
   websites: [Object],

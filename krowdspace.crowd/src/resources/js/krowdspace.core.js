@@ -1,4 +1,5 @@
 import store from '../../store/index';
+import moment from 'moment';
 import { toggleModal, setError, setLoading } from '../../actions/index';
 
 export const core = {
@@ -6,7 +7,7 @@ export const core = {
     return {
       name: localStorage.getItem('name') || false,
       email: localStorage.getItem('email') || false,
-      password_reset: localStorage.getItem('password_reset') || false,
+      password_reset: JSON.parse(localStorage.getItem('password_reset')) || false,
       active: !!localStorage.getItem('token'),
       token: localStorage.getItem('token') || false,
       _id: localStorage.getItem('_id') || false
@@ -52,5 +53,55 @@ export const core = {
     if (/[a-z]/.test(state.password)) state.password_strength++;
 
     return state;
+  },
+  abbreviateNumber: function(number, decPlaces) {
+    decPlaces = Math.pow(10, decPlaces);
+    let numberAbs = Math.abs(number);
+    // Enumerate number abbreviations
+    var abbrev = ['K', 'M', 'B', 'T'];
+    // Go through the array backwards, so we do the largest first
+    for (var i = abbrev.length - 1; i >= 0; i--) {
+      // Convert array index to "1000", "1000000", etc
+      var size = Math.pow(10, (i + 1) * 3);
+      // If the number is bigger or equal do the abbreviation
+      if (size <= numberAbs) {
+        // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+        // This gives us nice rounding to a particular decimal place.
+        numberAbs = Math.round((numberAbs * decPlaces) / size) / decPlaces;
+        // Handle special case where we round up to the next abbreviation
+
+        // Add the letter for the abbreviation
+        numberAbs += abbrev[i];
+
+        // We are done... stop
+        break;
+      }
+    }
+    return Math.sign(number) === -1 ? `-${numberAbs}` : numberAbs;
+  },
+  formatNumber: function(number, type) {
+    const float_number = parseFloat(number);
+
+    if (Number.isInteger(Number.parseInt(number, 10)) || type === 'date') {
+      switch (type.toLowerCase()) {
+        case 'number-abbr':
+        return this.abbreviateNumber(float_number, 1);
+        case 'number-whole':
+          return  Math.floor(float_number).toLocaleString();
+        case 'currency':
+          return '$' + float_number.toFixed(2);
+        case 'currency-int':
+          return '$' + Math.floor(number).toLocaleString();
+        case 'currency-abbr':
+          return '$' + this.abbreviateNumber(float_number, 1);
+        case 'percentage':
+          return float_number.toFixed(0) + '%';
+        case 'date':
+          return moment(number).format('MMM D');
+        default:
+          return number;
+      }
+    }
+    return number;
   }
 };
