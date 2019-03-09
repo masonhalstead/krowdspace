@@ -1,38 +1,39 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { core } from 'resources/js/krowdspace.core';
 
-export const ProfileMetrics = ({
+export const ProfileProjectMetrics = ({
   likes,
-  project_count,
-  projects,
-  viewed,
+  backers,
+  pledged,
+  views,
   comments
 }) => {
   const metrics = [{
-    text: 'Liked',
+    text: 'Likes',
     class: 'profile-metric-icon-top',
     icon: ['fas', 'heart'],
-    data: likes || 0
+    data: core.formatNumber(likes, 'number-abbr') || 0
   },{
-    text: 'Viewed',
+    text: 'Views',
     class: 'profile-metric-icon',
     icon: ['fas', 'laptop'],
-    data: viewed || 0
+    data: core.formatNumber(views, 'number-abbr') || 0
   },{
-    text: 'Total Projects',
+    text: 'Backers',
     class: 'profile-metric-icon-right',
-    icon: ['fas', 'chart-pie'],
-    data: project_count || 0
+    icon: ['fas', 'tasks'],
+    data: core.formatNumber(backers, 'number-abbr') || 0
   },{
-    text: 'Commented',
+    text: 'Comments',
     class: 'profile-metric-icon-right',
     icon: ['far', 'thumbs-up'],
-    data: comments || 0
+    data: core.formatNumber(comments, 'number-abbr') || 0
   },{
-    text: 'Owned',
+    text: 'Pledged',
     class: 'profile-metric-icon',
-    icon: ['fas', 'tasks'],
-    data: projects || 0
+    icon: ['far', 'money-bill-alt'],
+    data: core.formatNumber(pledged, 'currency-abbr') || 0
   }];
   return (
     <div className="profile-metrics-container">

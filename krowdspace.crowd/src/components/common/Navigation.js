@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 import { toggleModal, userLogout } from '../../actions/';
 import krowdspace from '../../resources/images/krowdspace-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,7 +20,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 class ConnectedNavigation extends Component {
-  handleLogoutClick = () => this.props.userLogout();
+  handleLogoutClick = () => {
+    const { history, userLogout } = this.props;
+    userLogout();
+    history.push('/')
+  };
   handleUserLogin = () => this.props.toggleModal({ user_login: true });
   handleCreateAccount = () => this.props.toggleModal({ create_account: true });
   createUser = () => {
@@ -161,4 +166,5 @@ const Navigation = connect(
   mapStateToProps,
   mapDispatchToProps
 )(ConnectedNavigation);
-export default Navigation;
+const NavigationWithRouter = withRouter(Navigation);
+export default NavigationWithRouter;

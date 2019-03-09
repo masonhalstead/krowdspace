@@ -10,14 +10,14 @@
   max-width: 400px;
 }
 .modal-back-icon {
-  color: #d3d3d3;
+  color: lighten($primary, 30%);
   cursor: pointer;
   position: absolute;
   top: 10px;
   left: 15px;
 }
 .modal-close-icon {
-  color: #d3d3d3;
+  color: lighten($primary, 30%);
   cursor: pointer;
   position: absolute;
   top: 10px;

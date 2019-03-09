@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { core } from 'resources/js/krowdspace.core';
 
 export const ProfileProjects = ({ projects }) => {
   return (
@@ -10,7 +11,7 @@ export const ProfileProjects = ({ projects }) => {
     <div className="projects-wrapper">
        { projects.map((project, index) => {
            const { metrics } = project;
-           const percent = metrics.funded > 100 ? 100 : metrics.funded;
+           const percent = metrics.funded_total > 100 ? 100 : metrics.funded_total;
          return (
             <div key={index} className="profile-project-wrapper">
                 <div className="profile-project-container">
@@ -36,8 +37,8 @@ export const ProfileProjects = ({ projects }) => {
                         </p>
                         <p className="profile-project-description">{project.description}</p>
                         <div className="profile-project-metrics">
-                        <p>{metrics.currency_symbol}{Math.round(metrics.pledged).toLocaleString('en')} Funded</p>
-                        <p>{percent}%</p>
+                        <p>{metrics.currency_symbol}{Math.round(metrics.pledged_total).toLocaleString('en')} Funded</p>
+                        <p>{core.formatNumber(metrics.funded_total, 'percentage')}</p>
                         </div>
                         <div className="profile-percent-bar">
                             <span className="profile-project-percent" style={{width: `${percent}%`}}></span>

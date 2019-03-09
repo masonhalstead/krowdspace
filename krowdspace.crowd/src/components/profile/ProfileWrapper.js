@@ -72,12 +72,17 @@ class ConnectedProfileWrapper extends Component {
     
   };
   componentDidMount() {
-    const { user } = this.props;
+    const { user, setLoading } = this.props;
     let { featured } = this.state;
+
+    // Show loading icon
+    setLoading(true);
+
     api
       .getProfileData(user.token)
       .then(res => {
         featured = [...res.featured_projects, ...featured];
+        setLoading(false);
         this.setState({ featured, ...res.user, valid: false });
       })
       .catch(err => core.handleError(err));

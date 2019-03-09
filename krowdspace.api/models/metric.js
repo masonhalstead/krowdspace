@@ -13,7 +13,8 @@ const metricSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Projects'
   },
-  url: String,
+  domain: String,
+  slug: String,
   currency: String,
   currency_symbol: String,
   dates: Array,

@@ -19,7 +19,7 @@ const colors = {
   const pledged_object = {
       chart: {
         borderWidth: 0,
-        label: 'Pledged',
+        label: 'Daily Pledged',
         backgroundColor: chart_colors.pledged_object,
         yAxisID: 'pledged-data'
       },
@@ -46,7 +46,7 @@ const colors = {
   }
   const funding_object = {
       chart: {
-        label: 'Funded',
+        label: 'Daily Funded',
         data: [],
         type: 'line',
         fill: false,
@@ -82,7 +82,7 @@ const colors = {
           beginAtZero: true,
           suggestedMax: 100,
           userCallback: function(value) {
-            return core.formatNumber(value, 'percentage');
+            return core.formatNumber(value, 'percentage-abbr');
           }
         },
         gridLines: {
@@ -151,7 +151,7 @@ export class ProfileFundingChart extends Component {
             options_object.scales.yAxes.push(funding_object.options);
             chart.datasets.push(funding_object.chart);
             tooltip_labels.push({
-                label: ` Funded -`,
+                label: ` Funded:`,
                 format: 'percentage'
             });
         }
@@ -160,8 +160,8 @@ export class ProfileFundingChart extends Component {
             options_object.scales.yAxes.push(pledged_object.options);
             chart.datasets.push(pledged_object.chart);
             tooltip_labels.push({
-                label: ` Pledged -`,
-                format: 'currency-abbr'
+                label: ` Pledged:`,
+                format: 'currency-int'
             });
         }
 
@@ -201,16 +201,20 @@ export class ProfileFundingChart extends Component {
         const { chart , options} = this.state;
         const { metrics } = this.props;
         return (
-            <div className="profile-chart-wrapper">
+          <React.Fragment>
             <div className="profile-project-header-wrapper">
-            <h2 className="profile-project-title">Funding Progress</h2>
-            <h2 className="profile-project-title">{core.formatNumber(metrics.pledged_total, 'currency-int')} ({core.formatNumber(metrics.funded_total, 'percentage')})</h2>
+              <h2 className="profile-project-title">Funding Progress</h2>
+              <h2 className="profile-project-title">{core.formatNumber(metrics.pledged_total, 'currency-int')} ({core.formatNumber(metrics.funded_total, 'percentage')})</h2>
             </div>
-            <Bar
-                data={chart}
-                options={options}
-            />
+            <div className="profile-chart-wrapper">
+              <div className="profile-chart-container">
+                <Bar
+                    data={chart}
+                    options={options}
+                />
+              </div>
              </div>
+          </React.Fragment>
         )
     }
 }

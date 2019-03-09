@@ -4,7 +4,9 @@ const modals = {
   create_account: false,
   user_login: false,
   user_error: false,
-  submit_project: false
+  submit_project: false,
+  project_marketing: false,
+  project_settings: false
 };
 export const modalReducer = (state = modals, action) => {
   switch (action.type) {

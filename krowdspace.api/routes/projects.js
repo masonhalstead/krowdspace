@@ -1,10 +1,15 @@
 const auth = require('../middleware/auth');
-const seperate = require('../middleware/project-seperate');
+const normalize = require('../middleware/project-normalize');
+const metrics = require('../middleware/project-metrics');
 const group = require('../middleware/group');
 const { User } = require('../models/user');
 const { Metric } = require('../models/metric');
 const { Creator } = require('../models/creator');
-const { Project, validate } = require('../models/project');
+const {
+  Project,
+  validateProject,
+  validateProjectUpdate
+} = require('../models/project');
 const express = require('express');
 const router = express.Router();
 
@@ -23,9 +28,9 @@ router.get('/featured', auth, async (req, res) => {
   res.send(projects);
 });
 
-router.post('/create', auth, seperate, async (req, res) => {
-  const { error } = validate(req.body);
-  let { user_id, creator_id, project, metric } = req.body;
+router.post('/create', auth, normalize, metrics, async (req, res) => {
+  const { error } = validateProject(req.body);
+  let { user_id, creator_id, project, metrics } = req.body;
   if (error) return res.status(400).send(error.details[0].message);
 
   let user = await User.findById(user_id);
@@ -34,15 +39,15 @@ router.post('/create', auth, seperate, async (req, res) => {
   let creator = await Creator.findById(creator_id);
   if (!creator) creator = new Creator(req.body.creator);
 
-  project = await Project.findOne({ domain_id: project.domain_id });
+  project = await Project.findOne({ uri: project.uri });
   if (project) return res.status(400).send('Project is already registered.');
 
-  metric = new Metric(metric);
+  metrics = new Metric(metrics);
   project = new Project(req.body.project);
 
   project.user = user._id;
   project.creator = creator._id;
-  project.metrics = metric._id;
+  project.metrics = metrics._id;
 
   creator.projects.push(project._id);
   creator.user = user._id;
@@ -50,12 +55,12 @@ router.post('/create', auth, seperate, async (req, res) => {
   user.creator = creator._id;
   user.projects.push(project._id);
 
-  metric.project = project._id;
-  metric.creator = creator._id;
-  metric.user = user._id;
+  metrics.project = project._id;
+  metrics.creator = creator._id;
+  metrics.user = user._id;
 
   creator = await creator.save();
-  metric = await metric.save();
+  metrics = await metrics.save();
   user = await user.save();
   project = await project.save();
 
@@ -63,18 +68,23 @@ router.post('/create', auth, seperate, async (req, res) => {
   res.status(200).send(token);
 });
 
-router.put('/:id', [auth, group], async (req, res) => {
-  const { error } = validate(req.body);
+router.put('/:project_id/update', [auth, group], async (req, res) => {
+  const { error } = validateProjectUpdate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const projects = await Project.findByIdAndUpdate(
-    req.params.id,
-    { name: req.body.name },
-    {
-      new: true
-    }
-  );
+  const project_id = req.params.project_id;
+  const project = req.body;
 
+  const projects = await Project.findOneAndUpdate(
+    { uri: project_id },
+    {
+      featured: project.featured,
+      allow_marketing: project.allow_marketing,
+      category: project.category,
+      retail_url: project.retail_url
+    },
+    { new: true }
+  );
   if (!projects)
     return res.status(404).send('The genre with the given ID was not found.');
 

@@ -1,5 +1,6 @@
 .profile-wrapper {
   display: flex;
+  flex-grow: 1;
   background: #fff;
   padding: 25px 15px;
 }
@@ -26,6 +27,10 @@
   margin: 10px 0px;
   font-size: 20px;
 }
+.profile-project-header-title {
+  margin: 5px 0px;
+  font-size: 20px;
+}
 .projects-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -48,7 +53,8 @@
   justify-content: space-between;
   align-items: flex-end;
   flex-grow: 1;
-  margin: 15px 0px;
+  margin-top: 25px;
+  margin-bottom: 5px;
 }
 .profile-metrics-wrapper {
   display: flex;
@@ -141,8 +147,17 @@
 .profile-project-short-link {
   margin-bottom: 8px;
 }
+.project-title-short-link {
+  margin-bottom: 8px;
+}
 .profile-project-description {
   margin: 0px;
+  flex-grow: 1;
+}
+.profile-project-title-description {
+  margin: 0px;
+  margin-top: 25px;
+  font-size: 16px;
   flex-grow: 1;
 }
 .profile-percent-bar {
@@ -171,4 +186,11 @@
 .profile-project-flex {
   padding: 0px 10px;
   flex-grow: 1;
+}
+.profile-modal {
+  cursor: pointer;
+  color: $primary;
+}
+.profile-modal:hover {
+  color: darken($primary, 20%);
 }

@@ -37,7 +37,14 @@ module.exports = async function(req, res, next) {
         });
       break;
     case 'indiegogo':
-      res.status(400).send('Error matching project domain');
+      await indiegogo(req)
+        .then(res => {
+          req.body = res;
+          next();
+        })
+        .catch(err => {
+          res.status(400).send('Error populating Indiegogo project');
+        });
       break;
     default:
       res.status(400).send('Error matching project domain');

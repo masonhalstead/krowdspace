@@ -13,91 +13,90 @@ const colors = {
     blue_opacity: 'rgba(255, 255, 255, 0.4)'
   };
   const chart_colors = {
-    like_object: colors.purple,
-    funding_object: colors.orange,
-    view_object: colors.blue
+    like_object: colors.red,
+    backer_object: colors.orange,
+    view_object: colors.purple
   };
   const like_object = {
       chart: {
         borderWidth: 0,
-        label: 'Pledged',
+        label: 'Daily Likes',
         backgroundColor: chart_colors.like_object,
         yAxisID: 'pledged-data'
-      },
-      options: {
-        id: 'pledged-data',
-        display: true,
-        position: 'left',
-        scaleLabel: {
-          display: true,
-          labelString: 'Daily Pledged'
-        },
-        ticks: {
-          display: true,
-          beginAtZero: true,
-          suggestedMax: 100,
-          userCallback: function(value) {
-            return core.formatNumber(value, 'currency-abbr');
-          }
-        },
-        gridLines: {
-          display: false
-        }
       }
   }
   const view_object = {
     chart: {
       borderWidth: 0,
-      label: 'Pledged',
+      label: 'Daily Views',
       backgroundColor: chart_colors.view_object,
       yAxisID: 'pledged-data'
     },
     options: {
       id: 'pledged-data',
       display: true,
-      position: 'left',
+      position: 'right',
       scaleLabel: {
         display: true,
-        labelString: 'Daily Pledged'
+        labelString: 'Internal Analytics'
       },
       ticks: {
         display: true,
         beginAtZero: true,
         suggestedMax: 100,
         userCallback: function(value) {
-          return core.formatNumber(value, 'currency-abbr');
+          return core.formatNumber(value, 'number-abbr');
         }
       },
       gridLines: {
-        display: false
+        display: true
       }
     }
+
 }
   const backer_object = {
       chart: {
+        data: [],
+        type: 'line',
+        label: 'Daily Backers',
+        fill: false,
+        lineTension: 0,
+        backgroundColor: chart_colors.backer_object,
+        borderColor: chart_colors.backer_object,
+        borderCapStyle: 'round',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
         borderWidth: 0,
-      label: 'Pledged',
-      backgroundColor: chart_colors.view_object,
-      yAxisID: 'pledged-data'
+        pointBackgroundColor: chart_colors.backer_object,
+        pointBorderColor: chart_colors.backer_object,
+        pointBorderWidth: 1,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: chart_colors.backer_object,
+        pointHoverBorderColor: chart_colors.backer_object,
+        pointHoverBorderWidth: 1,
+        pointRadius: 2,
+        pointHitRadius: 10,
+      yAxisID: 'external-data'
       },
       options: {
-        id: 'pledged-data',
+        id: 'external-data',
         display: true,
-        position: 'right',
+        position: 'left',
         scaleLabel: {
           display: true,
-          labelString: 'Funded Percent'
+          labelString: 'External Analytics'
         },
         ticks: {
           display: true,
           beginAtZero: true,
           suggestedMax: 100,
           userCallback: function(value) {
-            return core.formatNumber(value, 'percentage');
+            return core.formatNumber(value, 'number-abbr');
           }
         },
         gridLines: {
-          display: true
+          display: false
         }
       }
   }
@@ -156,14 +155,14 @@ export class ProfileAnalyticsChart extends Component {
         const { likes, backers, views, dates } = metrics;
         const tooltip_labels = [];
 
+
         chart.labels = [...dates];
         if(likes.length){
             like_object.chart.data = [...likes];
-            options_object.scales.yAxes.push(like_object.options);
             chart.datasets.push(like_object.chart);
             tooltip_labels.push({
-                label: ` Likes -`,
-                format: 'percentage'
+                label: ` Likes:`,
+                format: 'number-int'
             });
         }
         if(backers.length){
@@ -171,17 +170,17 @@ export class ProfileAnalyticsChart extends Component {
             options_object.scales.yAxes.push(backer_object.options);
             chart.datasets.push(backer_object.chart);
             tooltip_labels.push({
-                label: ` Backers -`,
-                format: 'currency-abbr'
+                label: ` Backers:`,
+                format: 'number-int'
             });
         }
         if(views.length){
             view_object.chart.data = [...views];
-            options_object.scales.yAxes.push(view_object.options);
             chart.datasets.push(view_object.chart);
+            options_object.scales.yAxes.push(view_object.options);
             tooltip_labels.push({
-                label: ` Views -`,
-                format: 'currency-abbr'
+                label: ` Views:`,
+                format: 'number-int'
             });
         }
 
@@ -219,18 +218,21 @@ export class ProfileAnalyticsChart extends Component {
     }
     render() {
         const { chart , options} = this.state;
-        const { metrics } = this.props;
         return (
-            <div className="profile-chart-wrapper">
+          <React.Fragment>
             <div className="profile-project-header-wrapper">
-            <h2 className="profile-project-title">Project Analytics</h2>
-            <h2 className="profile-project-title">{core.formatNumber(metrics.pledged_total, 'currency-int')} ({core.formatNumber(metrics.funded_total, 'percentage')})</h2>
+              <h2 className="profile-project-title">Project Analytics</h2>
+              <h2 className="profile-project-title"></h2>
             </div>
-            <Bar
-                data={chart}
-                options={options}
-            />
+            <div className="profile-chart-wrapper">
+              <div className="profile-chart-container">
+                <Bar
+                    data={chart}
+                    options={options}
+                />
+              </div>
              </div>
+          </React.Fragment>
         )
     }
 }

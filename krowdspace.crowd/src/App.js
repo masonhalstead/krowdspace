@@ -5,18 +5,21 @@ import Navigation from './components/common/Navigation';
 import CreateAccount from './components/modals/CreateAccount';
 import Body from 'components/common/Body';
 import UserLogin from './components/modals/UserLogin';
+import AllowMarketing from './components/modals/AllowMarketing';
+import ProjectSettings from './components/modals/ProjectSettings';
 import ErrorMessage from './components/modals/ErrorMessage';
 import SubmitProject from './components/modals/SubmitProject';
 import PasswordReset from './components/modals/PasswordReset';
 import LoadingOverlay from './components/common/LoadingOverlay';
 import { SideNav } from './components/common/SideNav';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Footer } from './components/common/Footer';
 import { defaults, Chart } from 'react-chartjs-2';
 import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import * as async from './routes/index';
 import { setDisplay, checkUserAuth } from './actions/index';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas, faLaptop } from '@fortawesome/free-solid-svg-icons';
+import { fas, faLaptop, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { far, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { fab, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -34,7 +37,8 @@ import {
   faHeart,
   faChartPie,
   faTasks,
-  faSyncAlt
+  faSyncAlt,
+  faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
   far,
@@ -57,7 +61,9 @@ library.add(
   faChartPie,
   faThumbsUp,
   faTasks,
-  faSyncAlt
+  faSyncAlt,
+  faMoneyBillAlt,
+  faQuestionCircle
 );
 
 // Charts.js Global Defaults
@@ -129,20 +135,6 @@ class ConnectedApp extends Component {
   render() {
     const { navigation, side_nav } = this.state;
     const { navbar_height, side_panel_width, active_menu } = this.props.display;
-    const active = !!localStorage.getItem('token');
-    const PrivateRoutes = () => {
-      return active ? (
-        <React.Fragment>
-        <Route exact path="/profile" component={async.ProfileWrapper} />
-        <Route exact path="/profile/projects/:project_id" component={async.ProfileProjectWrapper} />
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-        <Redirect from="/profile" push to="/" />
-        <Redirect from="/profile/projects/:project_id" push to="/" />
-        </React.Fragment>
-      );
-    };
     return (
       <BrowserRouter basename="/">
         <div className="krowdspace-container">
@@ -153,12 +145,14 @@ class ConnectedApp extends Component {
             navigation={navigation}
           />
           <Body width={side_panel_width} top={navbar_height}>
-            <Scrollbars autoHide={false}>
+            <Scrollbars className="body-scroll" autoHide={false}>
               <Switch>
                 <Route exact path="/" component={async.HomeWrapper} />
-                <PrivateRoutes />
+                <Route exact path="/profile" component={async.ProfileWrapper} />
+                <Route exact path="/profile/projects/:project_id" component={async.ProfileProjectWrapper} />
                 <Route component={async.HomeWrapper} />
               </Switch>
+              <Footer />
             </Scrollbars>
           </Body>
           <SidePanel width={side_panel_width} top={navbar_height}>
@@ -168,6 +162,8 @@ class ConnectedApp extends Component {
           <LoadingOverlay />
           {/* Modals */}
           <UserLogin />
+          <AllowMarketing />
+          <ProjectSettings />
           <PasswordReset />
           <ErrorMessage />
           <CreateAccount />

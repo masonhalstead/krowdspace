@@ -14,7 +14,7 @@ export const ChooseProject = ({
 }) => {
   return (
     <React.Fragment>
-      <h2 className="user-create-title">Input crowdfunding link</h2>
+      <h2 className="user-create-title">Crowdfunding Link</h2>
       <div className="user-password-container">
         <Form.Label className="user-password-label">Project Link</Form.Label>
         {url_valid !== 2 && (

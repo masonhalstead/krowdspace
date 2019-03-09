@@ -1,6 +1,7 @@
 const request = require('request-promise');
 const moment = require('moment');
 const $ = require('cheerio');
+const { INDIEGOGO_API_KEY } = process.env;
 
 kickstarter = async req => {
   const { normalized_url, domain, category } = req.body;
@@ -20,88 +21,166 @@ kickstarter = async req => {
     });
 
     const project_cleaned = project_cheerio.html();
-    const { project } = project_object;
+    const kickstarter = project_object.project;
+    const project_uri = parseInt(Math.random() * 10000000, 10);
 
-    const finish_date = project.deadlineAt * 1000;
-    const start_date = finish_date - 1000 * 60 * 60 * 24 * project.duration;
-
-    const day_diff = 2;
-    const day_count =
-      day_diff + moment(finish_date).diff(moment(new Date()), 'days');
-    let days = [];
-    for (let day = 0; day < day_count; day++) {
-      days.push(
-        moment()
-          .add(day, 'days')
-          .toDate()
-      );
-    }
+    const finish_date = kickstarter.deadlineAt * 1000;
+    const start_date = finish_date - 1000 * 60 * 60 * 24 * kickstarter.duration;
+    const todays_date = new Date().getTime();
 
     return {
       user_id: _id,
       creator_id: creator_id,
       project: {
-        uri: project.pid || parseInt(Math.random() * 10000000, 10),
-        featured: false,
-        domain_id: project.id || undefined,
-        domain: domain || undefined,
-        category: category || undefined,
-        short_link: project.projectShortLink || undefined,
-        url: project.url || undefined,
+        uri: project_uri,
+        featured: kickstarter.percentFunded > 100 ? true : false,
+        slug: kickstarter.slug,
+        domain: domain,
+        category: category,
+        short_link: kickstarter.projectShortLink,
+        url: kickstarter.url,
+        retail_url: undefined,
+        allow_marketing: false,
         start_date: start_date,
+        todays_date: todays_date,
         finish_date: finish_date,
-        duration: project.duration || 0,
-        state: project.state || undefined,
-        description: project.description || undefined,
-        name: project.name || undefined,
-        image_url: project.imageUrl || undefined,
-        content: project_cleaned || undefined
+        last_sync: todays_date,
+        duration: kickstarter.duration,
+        state: kickstarter.state,
+        description: kickstarter.description,
+        name: kickstarter.name,
+        image_url: kickstarter.imageUrl,
+        content: project_cleaned
       },
       creator: {
-        domain: domain || undefined,
-        name: project.creator.name || undefined,
-        websites: project.creator.websites || undefined,
-        image_url: project.creator.imageUrl || undefined,
-        biography: project.creator.biography || undefined,
-        project_count: project.creator.createdProjects.totalCount || 0,
-        location: project.location.displayableName || undefined
+        name: kickstarter.creator.name,
+        domain: domain,
+        slug: kickstarter.slug,
+        post_link: `https://krowdspace.com/projects/${project_uri}`,
+        post_message: kickstarter.title,
+        post_image: kickstarter.imageUrl,
+        last_facebook_post: 0,
+        last_instagram_post: 0,
+        last_pinterest_post: 0,
+        last_twitter_post: 0,
+        image_url: kickstarter.creator.imageUrl,
+        biography: kickstarter.creator.biography,
+        project_count: kickstarter.creator.createdProjects.totalCount,
+        location: kickstarter.location.displayableName
       },
-      metric: {
-        project: project.id || undefined,
-        url: project.url || undefined,
-        currency: project.currency || undefined,
-        currency_symbol: project.goal.symbol || '$',
-        dates: days,
-        views: [0],
-        views_daily: 0,
-        views_total: 0,
-        likes: [0],
-        likes_daily: 0,
-        likes_total: 0,
-        backers: [project.backersCount] || [0],
-        backers_daily: project.backersCount || 0,
-        backers_total: project.backersCount || 0,
-        funded: [project.percentFunded] || [0],
-        funded_daily: project.percentFunded || 0,
-        funded_total: project.percentFunded || 0,
-        pledged: [project.pledged.amount] || [0],
-        pledged_daily: project.pledged.amount || 0,
-        pledged_total: project.pledged.amount || 0,
-        goal: project.goal.amount || 0
+      metrics: {
+        domain: domain,
+        slug: kickstarter.slug,
+        currency: kickstarter.currency,
+        currency_symbol: kickstarter.goal.symbol,
+        backers_total: kickstarter.backersCount,
+        funded_total: kickstarter.percentFunded,
+        pledged_total: kickstarter.pledged.amount,
+        goal: kickstarter.goal.amount
       }
     };
   });
 };
 indiegogo = async (req, res, next) => {
-  // const token = req.header("x-auth-token");
-  // if (!token) return res.status(401).send("Access denied, No token provided");
-  // try {
-  //   const decoded = jwt.verify(token, PRIVATE_KEY);
-  //   req.user = decoded;
-  //   next();
-  // } catch (ex) {
-  //   res.status(400).send("Invalid token");
-  // }
+  const { normalized_url, domain, category } = req.body;
+  const { _id, creator_id } = req.user;
+
+  const indiegogo_path = new URL(normalized_url).pathname;
+  const indiegogo_project = indiegogo_path.split('/');
+  const api_url = `https://api.indiegogo.com/1/campaigns/${
+    indiegogo_project[2]
+  }.json?api_token=${INDIEGOGO_API_KEY}`;
+
+  return request(api_url).then(res => {
+    const json_res = JSON.parse(res);
+    const indiegogo = json_res.response;
+    const project_uri = parseInt(Math.random() * 10000000, 10);
+
+    const funded_total = (indiegogo.collected_funds / indiegogo.goal) * 100;
+    const finish_date = new Date(indiegogo.funding_ends_at).getTime();
+    const todays_date = new Date().getTime();
+    const start_date = new Date(indiegogo.funding_started_at).getTime();
+
+    return {
+      user_id: _id,
+      creator_id: creator_id,
+      project: {
+        uri: project_uri,
+        featured: funded_total > 100 ? true : false,
+        slug: indiegogo.slug,
+        domain: domain,
+        category: category,
+        short_link: `https://igg.me/at/${indiegogo.short_link}`,
+        url: indiegogo.web_url,
+        retail_url: undefined,
+        allow_marketing: false,
+        start_date: start_date,
+        todays_date: todays_date,
+        finish_date: finish_date,
+        last_sync: todays_date,
+        duration: indiegogo.funding_days,
+        state: indiegogo.status,
+        description: indiegogo.tagline,
+        name: indiegogo.title,
+        image_url:
+          indiegogo.video_overlay_url ||
+          indiegogo.baseball_card_image_url ||
+          undefined,
+        content: indiegogo.description_html
+      },
+      metrics: {
+        domain: domain,
+        slug: indiegogo.slug,
+        currency: indiegogo.currency.iso_code,
+        currency_symbol: indiegogo.currency.symbol,
+        backers_total: indiegogo.contributions_count,
+        funded_total: (indiegogo.collected_funds / indiegogo.goal) * 100,
+        pledged_total: indiegogo.collected_funds,
+        goal: indiegogo.goal
+      },
+      creator: {
+        name: undefined,
+        domain: domain,
+        slug: indiegogo.slug,
+        image_url: indiegogo.baseball_card_image_url,
+        biography: undefined,
+        project_count: 1,
+        location: `${indiegogo.city},${indiegogo.country}`,
+        post_link: `https://krowdspace.com/projects/${project_uri}`,
+        post_message: indiegogo.title,
+        post_image:
+          indiegogo.video_overlay_url ||
+          indiegogo.baseball_card_image_url ||
+          undefined,
+        last_facebook_post: 0,
+        last_instagram_post: 0,
+        last_pinterest_post: 0,
+        last_twitter_post: 0,
+        websites: [
+          {
+            url: indiegogo.facebook_url,
+            domain: 'Facebook'
+          },
+          {
+            url: indiegogo.twitter_url,
+            domain: 'Twitter'
+          },
+          {
+            url: indiegogo.youtube_url,
+            domain: 'Youtube'
+          },
+          {
+            url: indiegogo.imdb_url,
+            domain: 'IMBD'
+          },
+          {
+            url: indiegogo.website_url,
+            domain: 'Website'
+          }
+        ]
+      }
+    };
+  });
 };
 
 module.exports = {

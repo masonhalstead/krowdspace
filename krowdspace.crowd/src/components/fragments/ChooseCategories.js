@@ -61,7 +61,7 @@ export const ChooseCategories = ({
 }) => {
   return (
     <React.Fragment>
-      <h2 className="user-create-title">Select a category</h2>
+      <h2 className="user-create-title">Choose Category</h2>
       <Form.Group className="user-checkbox-flex">
         {categories.map(cat => {
           return (

@@ -94,8 +94,10 @@ export const core = {
           return '$' + Math.floor(number).toLocaleString();
         case 'currency-abbr':
           return '$' + this.abbreviateNumber(float_number, 1);
+        case 'percentage-abbr':
+          return this.abbreviateNumber(float_number, 1) + '%';
         case 'percentage':
-          return float_number.toFixed(0) + '%';
+          return Math.floor(float_number).toLocaleString() + '%';
         case 'date':
           return moment(number).format('MMM D');
         default:
