@@ -24,7 +24,6 @@ const creatorSchema = new mongoose.Schema({
   websites: [Object],
   image_url: String,
   biography: String,
-  project_count: Number,
   location: String
 });
 

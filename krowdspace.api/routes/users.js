@@ -5,6 +5,7 @@ const google = require('../middleware/auth-google');
 const express = require('express');
 const router = express.Router();
 const { Project } = require('../models/project');
+const { Creator } = require('../models/creator');
 const { userActions } = require('../actions/users');
 const { metricActions } = require('../actions/metrics');
 
@@ -34,14 +35,17 @@ router.get('/projects/:project_id', auth, async (req, res) => {
   const user_id = req.user._id;
 
   const project = await Project.findOne({ uri: project_id });
+  const creator = await Creator.findOne({ _id: project.creator });
   const metrics = await metricActions('ADD_VIEWS', project.metrics);
   const user = await userActions('ADD_VIEWS', user_id);
 
   if (!project) return res.status(404).send('The project was not found.');
+  if (!creator)
+    return res.status(404).send('The project creator was not found.');
   if (String(user._id) !== String(project.user))
     return res.status(404).send('Unauthorized to access this project');
 
-  res.send({ project, metrics });
+  res.send({ project, metrics, creator });
 });
 
 router.put('/password-reset', auth, async (req, res) => {

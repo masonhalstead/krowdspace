@@ -12,6 +12,15 @@ export const api = {
       data: data
     });
   },
+  publicGet: function(url) {
+    return axios({
+      method: 'get',
+      url: `${REACT_APP_HOST}${url}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  },
   getData: function(url, token) {
     return axios({
       method: 'get',
@@ -69,6 +78,15 @@ export const api = {
   getProfileProjectData: function(token, project_id) {
     return axios
       .all([this.getData(`/api/users/projects/${project_id}`, token)])
+      .then(axios.spread((res) => res.data));
+  },
+  getProjectsData: function(limit, page) {
+    const data = {
+      limit: limit,
+      page: page
+    }
+    return axios
+      .all([this.publicPost(`/api/projects`, data)])
       .then(axios.spread((res) => res.data));
   },
 };

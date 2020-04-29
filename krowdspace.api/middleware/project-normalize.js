@@ -33,6 +33,7 @@ module.exports = async function(req, res, next) {
           next();
         })
         .catch(err => {
+          console.log(err);
           res.status(400).send('Error populating Kickstarter project');
         });
       break;

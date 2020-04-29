@@ -77,7 +77,6 @@ function validateProject(data) {
     last_pinterest_post: Joi.number().optional(),
     last_twitter_post: Joi.number().optional(),
     biography: Joi.string().optional(),
-    project_count: Joi.number().optional(),
     location: Joi.string().optional(),
     websites: Joi.array().optional()
   });

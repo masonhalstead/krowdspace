@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toggleModal, userLogin, setAuthToken, setLoading, updateUser } from 'actions';
 import { ProfileProjectForm } from './ProfileProjectForm';
+import { ProfileSocialPosts } from './ProfileSocialPosts';
 import { ProfileFundingChart } from './ProfileFundingChart';
 import { ProfileAnalyticsChart } from './ProfileAnalyticsChart';
 import { ProfileProjectMetrics } from './ProfileProjectMetrics';
@@ -39,6 +40,9 @@ class ConnectedProfileProjectWrapper extends Component {
       category: '',
       retail_url: '',
       allow_marketing: false
+    },
+    creator: {
+
     },
     metrics: {
       funded: [],
@@ -132,6 +136,7 @@ class ConnectedProfileProjectWrapper extends Component {
         this.setState({
           project: res.project,
           metrics: res.metrics,
+          creator: res.creator,
           data_loaded: true
         });
         setLoading(false);
@@ -139,7 +144,7 @@ class ConnectedProfileProjectWrapper extends Component {
       .catch(err => core.handleError(err));
   }
   render() {
-    const { project, metrics, data_loaded, valid } = this.state;
+    const { project, metrics, data_loaded, creator, valid } = this.state;
     return (
       <React.Fragment>
         <div className="profile-wrapper">
@@ -179,6 +184,9 @@ class ConnectedProfileProjectWrapper extends Component {
           </div>
         </div>
         <div className="project-bottom-wrapper">
+          <div className="project-metrics-container">
+          { data_loaded && <ProfileSocialPosts creator={creator} /> }
+          </div>
           <div className="project-metrics-container">
           { data_loaded && <ProfileFundingChart metrics={metrics} /> }
           </div>

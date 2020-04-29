@@ -65,7 +65,6 @@ kickstarter = async req => {
         last_twitter_post: 0,
         image_url: kickstarter.creator.imageUrl,
         biography: kickstarter.creator.biography,
-        project_count: kickstarter.creator.createdProjects.totalCount,
         location: kickstarter.location.displayableName
       },
       metrics: {
@@ -144,7 +143,6 @@ indiegogo = async (req, res, next) => {
         slug: indiegogo.slug,
         image_url: indiegogo.baseball_card_image_url,
         biography: undefined,
-        project_count: 1,
         location: `${indiegogo.city},${indiegogo.country}`,
         post_link: `https://krowdspace.com/projects/${project_uri}`,
         post_message: indiegogo.title,

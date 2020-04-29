@@ -13,8 +13,13 @@ const {
 const express = require('express');
 const router = express.Router();
 
-router.get('/', auth, async (req, res) => {
-  const projects = await Project.find().sort('name');
+router.post('/', async (req, res) => {
+  const { page, limit } = req.body;
+  const projects = await Project.find()
+    .limit(limit)
+    .skip(limit * page)
+    .populate('metrics')
+    .sort('featured');
   res.send(projects);
 });
 
@@ -22,7 +27,7 @@ router.get('/featured', auth, async (req, res) => {
   const projects = await Project.find(
     { featured: true },
     'name image_url uri description'
-  ).populate('metric_id');
+  ).populate('metrics');
   if (!projects) return res.send([]);
 
   res.send(projects);
